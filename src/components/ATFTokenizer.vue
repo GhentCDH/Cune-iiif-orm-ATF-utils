@@ -16,11 +16,13 @@
                         <span class="gutter">{{ line.lineNumber }}.</span>
 
                         <div style="signs">
-                            <span v-for="sign in line.signs" 
-                            v-on:mouseleave="(event) => onSignDeselect(event,sign)" 
-                            v-on:mouseover="(event) => onSignSelect(event,sign)"
-                            >
-                                <span class="sign">{{ sign.text }}</span>&nbsp;
+                            <span v-for="sign in line.signs">
+                                {{ sign.prefix }}<span  
+                                v-on:mouseleave="(event) => onSignDeselect(event,sign)" 
+                                v-on:mouseover="(event) => onSignSelect(event,sign)" class="sign">
+                                    {{ sign.text }}
+                                </span>{{ sign.suffix }}
+                                
                             </span>
                         </div>
                     </div>

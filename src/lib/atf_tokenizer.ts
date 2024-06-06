@@ -7,9 +7,12 @@ type Sign = {
     characterPosition: number;
     text: string;
     signNumber: number,
+    prefix?: string;
+    suffix?: string;
 };
   
 type Line = {
+    characterPosition: number;
     lineNumber: number;
     original_text: string;
     signs: Sign[];
@@ -75,7 +78,7 @@ class ATFTokenizer {
         });
 
         //tablet separators
-        this.tokenizer.rule(/[ #\.<>\-\[\]\?;]+/, (ctx, match) => {
+        this.tokenizer.rule(/[ #\.<>\-\[\]\?;\/]+/, (ctx, match) => {
             ctx.accept('tablet_sign_separator', match[2]);
         });
 
@@ -107,16 +110,29 @@ class ATFTokenizer {
                 let last_part = tablet.parts[tablet.parts.length - 1];
                 last_part.lines.push({
                         lineNumber: token.value[0],
+                        characterPosition: token.pos,
                         original_text: token.value[1],
                         signs: []});
              } else if (token.type === 'tablet_sign') {
                 let last_part = tablet.parts[tablet.parts.length - 1];
                 let last_line = last_part.lines[last_part.lines.length - 1];
-                last_line.signs.push({
+
+                let sign = {
                     characterPosition: token.pos,
                     text: token.value,
                     signNumber: last_line.signs.length + 1
-                });
+                } as Sign;
+
+                
+                if (last_line.signs.length === 0) {
+                    sign.prefix = '';
+                } else {
+                    let last_sign = last_line.signs[last_line.signs.length - 1];
+                    sign.prefix = atfString.substring(last_sign.characterPosition + last_sign.text.length, sign.characterPosition);
+                }
+
+                last_line.signs.push(sign);
+
              }
              //ignore other tokens
         });
