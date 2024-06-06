@@ -1,13 +1,8 @@
 # atf-cuniform-utilities
 
-This contains TypeScript functions which help when working with [ATF](http://oracc.museum.upenn.edu/doc/help/editinginatf/),, a semi-standardized textmarkup format used by the [Cuneiform Digital Library Initiative](https://cdli.ucla.edu) as a way to transcribe [cuniform](https://en.wikipedia.org/wiki/Cuneiform) tablets.
+This contains TypeScript functions which help when working with [ATF](http://oracc.museum.upenn.edu/doc/help/editinginatf/), a semi-standardized text markup format used by the [Cuneiform Digital Library Initiative](https://cdli.ucla.edu) as a way to transcribe the contents of [cuniform](https://en.wikipedia.org/wiki/Cuneiform) tablets.
 
-Tokenizer 
-
-
-https://gitlab.com/fcgl/annotator-showcase/-/blame/main/js/annotatorfunctions.js?page=2#L1098
-
-https://github.com/ElectronicBabylonianLiterature/ebl-frontend/tree/4644dee9118484aa675cd37c3b6230e015760d86/src/transliteration/domain
+More specifically it contains a tokenizer to split ATF contents into separate characters. See [here](https://gitlab.com/fcgl/annotator-showcase/-/blame/main/js/annotatorfunctions.js?page=2#L1098) and [here](https://github.com/ElectronicBabylonianLiterature/ebl-frontend/tree/4644dee9118484aa675cd37c3b6230e015760d86/src/transliteration/domain) for similar projects.
 
 ## Recommended IDE Setup
 

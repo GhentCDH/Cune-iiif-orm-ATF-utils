@@ -3,6 +3,27 @@ import Tokenizr from 'tokenizr';
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
 
+type Sign = {
+    characterPosition: number;
+    text: string;
+    signNumber: number,
+};
+  
+type Line = {
+    lineNumber: number;
+    original_text: string;
+    signs: Sign[];
+};
+
+type Part = {
+    name: string;
+    lines: Line[];
+};
+
+type Tablet = {
+    parts: Part[];
+};
+
 class ATFTokenizer {
     private tokenizer: Tokenizr;
 
@@ -14,8 +35,13 @@ class ATFTokenizer {
     private setupRules() {
 
         //tablet part indication @obverse, @reverse, @edge
-        this.tokenizer.rule(/\@.+/, (ctx, match) => {
-            ctx.accept('tablet_part', match);
+        this.tokenizer.rule(/\@tablet/, (ctx, match) => {
+            ctx.ignore();
+        });
+
+        //tablet part indication @obverse, @reverse, @edge
+        this.tokenizer.rule(/(\@)(.+)/, (ctx, match) => {
+            ctx.accept('tablet_part', match[2]);
         });
         
 
@@ -30,48 +56,75 @@ class ATFTokenizer {
         });
 
         //comment line
-        this.tokenizer.rule(/#.*/, (ctx, match) => {
+        this.tokenizer.rule(/^#.*/, (ctx, match) => {
             ctx.accept('tablet_comment', match);
+            console.log('Comment: ', match);
         });
 
-        //tablet  line number
+        //tablet line number
         this.tokenizer.rule(/[0-9]+\. /, (ctx, match) => {
-            ctx.accept('tablet_part_line_number', parseInt(match[0]));
+            const remaineder = match.input.substring(match.index);
+            const lineText = remaineder.substring(0,remaineder.indexOf('\n'));
+            const lineNumber = parseInt(match[0]);
+            ctx.accept('tablet_line_number', [lineNumber, lineText]);
         });
 
-        //tablet sign
-        this.tokenizer.rule(/(\{|\.)?(.+?)(-|\s|\.|#\s*|\}\s*)/, (ctx, match) => {
-            ctx.accept('tablet_character', match[2]);
-            console.log(match);
+        //tablet sign delimeted by {} e.g. KI ur-{gisz}GIGIR
+        this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+\}?/, (ctx, match) => {
+            ctx.accept('tablet_sign', match[0]);
         });
 
-        //this.tokenizer.rule(/.*/, (ctx, match) => {
-        //    ctx.accept('line', match);
-        //});
-
-        this.tokenizer.rule(/.+/, (ctx, match) => {
-            ctx.accept('line', match);
+        //tablet separators
+        this.tokenizer.rule(/[ #\.<>\-\[\]\?;]+/, (ctx, match) => {
+            ctx.accept('tablet_sign_separator', match[2]);
         });
 
         this.tokenizer.rule(/\r?\n/, (ctx, match) => {
             //ctx.accept('newline', match);
             ctx.ignore();
         });
+
+        this.tokenizer.rule(/.+/, (ctx, match) => {
+            console.log('Unmatched text: ', match);
+            ctx.accept('line', match);
+        });
     }
 
     tokenize(atfString: string) {
-        const tokens = [];
+        let tablet: Tablet = {
+            parts: []
+        };
 
         this.tokenizer.input(atfString);
         this.tokenizer.tokens().forEach((token) => {
-             tokens.push(token.toString()); 
+
+             if (token.type === 'tablet_part') {
+                tablet.parts.push({
+                    name: token.value,
+                    lines: []
+                });
+             } else if (token.type === 'tablet_line_number') {
+                let last_part = tablet.parts[tablet.parts.length - 1];
+                last_part.lines.push({
+                        lineNumber: token.value[0],
+                        original_text: token.value[1],
+                        signs: []});
+             } else if (token.type === 'tablet_sign') {
+                let last_part = tablet.parts[tablet.parts.length - 1];
+                let last_line = last_part.lines[last_part.lines.length - 1];
+                last_line.signs.push({
+                    characterPosition: token.pos,
+                    text: token.value,
+                    signNumber: last_line.signs.length + 1
+                });
+             }
+             //ignore other tokens
         });
 
-
-        return tokens;
+        
+        return tablet;
     }
+
 }
 
-export default ATFTokenizer;
-
-// Usage example
+export  {ATFTokenizer, type Tablet,type Part,type Line, type Sign };
