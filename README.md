@@ -58,7 +58,6 @@ If a line is given but not all signs on the line are annotated, which is then th
 4.	example of word mixing: the rule is that hyphens split syllables or words within Proper nouns, whereas dots split different signs part of a word in logographic writing. Syllables are written with lower case letters, logograms with upper case letters. One typical confusion is that in Proper nouns two words written with logographic writing can be split by hyphens if they each refer to two individual words, e.g. `{d}EN.ZU` for the god Sîn, but `{d}EN.ZU-ZI` for the personal name Sîn-napišti (`ZI` = `napišti`).
 5.	example of ambiguity for upper case: most upper case written signs are logograms, but some are uncertain readings for a sign, i.e. we can see what sign it is, but we don’t know how to understand it.
 
-
 ## Important ATF flags
 
 * `#` = partial breakage, all signs after each other that are followed by a # will be parsed in classical publications to start and end with upper-half square brackets, e.g. ITI NE#.NE#.GAR# U4.5(disz).KAM parses to ITI ⸢NE.NE.GAR⸣ U4.5(disz).KAM. Most often these signs will also be annotated but sometimes they won't, depends on how bad the breakage is.

@@ -1,43 +1,37 @@
 <template>
-    <div id="atf_demo">
-        <h3>ATF</h3>
-        <h3>highlighted</h3>
 
-        <textarea v-model="atf"></textarea>
-
-        <div>
-            <span v-for="part in tokenized.parts">
+<div>
+    <div v-for="part in tokenized.parts">
+        <b>{{ part.name }}</b>
+        <div class="part" v-for="line in part.lines">
             
-                <b>{{ part.name }}</b>
-                <div class="part" v-for="line in part.lines">
-                    
-                    <div class="line">
-                        <div class="gutter" :class="{ highlight: line in highlighted }">{{ line.lineNumber }}.</div>
-                        <div class="line-text">
-                            <span v-for="word in line.words">
-                                <span class="word">
-                                    <span v-for="(sign, index) in word.signs">
-                                    {{ sign.prefix }}<span  
-                                    v-on:mouseleave="(event) => onDeselect(event,sign)" 
-                                    v-on:mouseover="(event) => onSelect(event,sign)" class="sign">{{ sign.text }}</span>{{ sign.suffix }}</span>
-                                </span>
-                                &nbsp;
-                            </span>
-                        </div>
-                    </div>   
+            <div class="line">
+                <div class="gutter">{{ line.lineNumber }}.</div>
+                <div class="line-text">
+                    <span v-for="word in line.words">
+                        <span class="word">
+                            <span v-for="(sign, index) in word.signs">
+                            {{ sign.prefix }}<span  
+                            v-on:mouseleave="(event) => onDeselect(event,sign)" 
+                            v-on:mouseover="(event) => onSelect(event,sign)" class="sign">{{ sign.text }}</span>{{ sign.suffix }}</span>
+                        </span>
+                        &nbsp;
+                    </span>
                 </div>
-            </span>
+            </div>   
         </div>
     </div>
-<pre>{{ atf_json }}</pre>
+</div>
+
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, toRef } from 'vue';
 import {ATFTokenizer} from '../lib/atf_tokenizer.ts';
 
 const props = defineProps({
-    selected: { type: Array, required: true }
+    selected: { type: Array, required: true },
+    atf: { type: String, required: true }
 });
 
 const emit = defineEmits({
@@ -53,7 +47,7 @@ const emit = defineEmits({
   }
 })
 
-const atf = ref('');
+
 
 // event called when sign is hovered
 const onSelect = (event,sign) => {
@@ -64,13 +58,7 @@ const onDeselect = (event,sign) => {
     emit('deselected', sign);
 }
 
-const highlighted = (signs) => {
-    console.log("highlight",signs);
-}
-
-fetch('/data/O_219.atf')
-    .then(response => response.text())
-    .then(data => atf.value = data);
+const atf =toRef(props, 'atf')
 
 const tokenized = computed(() => {
     const tokenizer = new ATFTokenizer();
@@ -78,25 +66,17 @@ const tokenized = computed(() => {
     return tokens;
 });
 
+
+/*
 const atf_json = computed(() => {
     const tokenizer = new ATFTokenizer();
     const tokens = tokenizer.tokenize(atf.value);
     return JSON.stringify(tokens, null, 2);
 });
-
+*/
 </script>
 
 <style scoped>
-#atf_demo {
-    margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem;
-}
-textarea {
-    width: 100%;
-    height: 70vh;
-}
 
 .line{
     display: grid;
