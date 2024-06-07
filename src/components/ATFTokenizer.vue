@@ -12,7 +12,7 @@
                 <div class="part" v-for="line in part.lines">
                     
                     <div class="line">
-                        <div class="gutter">{{ line.lineNumber }}.</div>
+                        <div class="gutter" :class="{ highlight: line in highlighted }">{{ line.lineNumber }}.</div>
                         <div class="line-text">
                             <span v-for="word in line.words">
                                 <span class="word">
@@ -54,12 +54,6 @@ const emit = defineEmits({
 })
 
 const atf = ref('');
-/*
-watch(highlighted, (newValue, oldValue) => {
-      // This function will be called whenever `highlighted` changes.
-      // `newValue` is the new value of `highlighted`, and `oldValue` is its previous value.
-      console.log(`highlighted changed from ${oldValue} to ${newValue}`);
-});*/
 
 // event called when sign is hovered
 const onSelect = (event,sign) => {
@@ -140,6 +134,10 @@ textarea {
 
 .word:hover {
     border-bottom: 1px solid red;
+}
+
+.highlight {
+    background-color: yellow;
 }
 
 .sign:hover {
