@@ -10,13 +10,22 @@ type Sign = {
     prefix?: string;
     suffix?: string;
 };
+
+type Word = {
+    text: string;
+    signs: Sign[];
+    characterPosition: number;
+    wordNumber: number;
+};
   
 type Line = {
     characterPosition: number;
     lineNumber: number;
     original_text: string;
-    signs: Sign[];
+    words: Word[];
 };
+
+type LineSelector = Omit<Line, 'characterPosition'>;
 
 type Part = {
     name: string;
@@ -47,7 +56,6 @@ class ATFTokenizer {
             ctx.accept('tablet_part', match[2]);
         });
         
-
         //dollar line
         this.tokenizer.rule(/(\$) (.+)/, (ctx, match) => {
             ctx.accept('tablet_dollar_line', match[1]);
@@ -59,9 +67,8 @@ class ATFTokenizer {
         });
 
         //comment line
-        this.tokenizer.rule(/^#.*/, (ctx, match) => {
-            ctx.accept('tablet_comment', match);
-            console.log('Comment: ', match);
+        this.tokenizer.rule(/\n ?# ?.*/, (ctx, match) => {
+            ctx.accept('tablet_comment', match);    
         });
 
         //tablet line number
@@ -70,15 +77,23 @@ class ATFTokenizer {
             const lineText = remaineder.substring(0,remaineder.indexOf('\n'));
             const lineNumber = parseInt(match[0]);
             ctx.accept('tablet_line_number', [lineNumber, lineText]);
+
+            //starts the first word
+            ctx.accept('tablet_word_separator', match[0]);
         });
 
         //tablet sign delimeted by {} e.g. KI ur-{gisz}GIGIR
-        this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+\}?/, (ctx, match) => {
+        this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+#?\}?/, (ctx, match) => {
             ctx.accept('tablet_sign', match[0]);
         });
 
-        //tablet separators
-        this.tokenizer.rule(/[ #\.<>\-\[\]\?;\/]+/, (ctx, match) => {
+        //Word separators
+        this.tokenizer.rule(/[ ;]+/, (ctx, match) => {
+            ctx.accept('tablet_word_separator', match[2]);
+        });
+
+        //Sign separators
+        this.tokenizer.rule(/[.<>\-\[\]\?;\#/]+/, (ctx, match) => {
             ctx.accept('tablet_sign_separator', match[2]);
         });
 
@@ -101,37 +116,49 @@ class ATFTokenizer {
         this.tokenizer.input(atfString);
         this.tokenizer.tokens().forEach((token) => {
 
-             if (token.type === 'tablet_part') {
-                tablet.parts.push({
+            if (token.type === 'tablet_part') {
+                let part = {
                     name: token.value,
                     lines: []
-                });
-             } else if (token.type === 'tablet_line_number') {
+                } as Part;
+                tablet.parts.push(part);
+            } else if (token.type === 'tablet_line_number') {
                 let last_part = tablet.parts[tablet.parts.length - 1];
-                last_part.lines.push({
-                        lineNumber: token.value[0],
-                        characterPosition: token.pos,
-                        original_text: token.value[1],
-                        signs: []});
-             } else if (token.type === 'tablet_sign') {
+                let line = {
+                    lineNumber: token.value[0],
+                    characterPosition: token.pos,
+                    original_text: token.value[1],
+                    words: []} as Line;
+                last_part.lines.push(line);
+            } else if (token.type === 'tablet_word_separator') {
                 let last_part = tablet.parts[tablet.parts.length - 1];
                 let last_line = last_part.lines[last_part.lines.length - 1];
+                let word = {
+                    characterPosition: token.pos,
+                    text: token.value,
+                    wordNumber: last_line.words.length + 1,
+                    signs: [],
+                } as Word;
+                last_line.words.push(word);
+            } else if (token.type === 'tablet_sign') {
+                let last_part = tablet.parts[tablet.parts.length - 1];
+                let last_line = last_part.lines[last_part.lines.length - 1];
+                let last_word = last_line.words[last_line.words.length - 1];
 
                 let sign = {
                     characterPosition: token.pos,
                     text: token.value,
-                    signNumber: last_line.signs.length + 1
+                    signNumber: last_word.signs.length + 1
                 } as Sign;
 
-                
-                if (last_line.signs.length === 0) {
+                if (last_word.signs.length === 0) {
                     sign.prefix = '';
                 } else {
-                    let last_sign = last_line.signs[last_line.signs.length - 1];
+                    let last_sign = last_word.signs[last_word.signs.length - 1];
                     sign.prefix = atfString.substring(last_sign.characterPosition + last_sign.text.length, sign.characterPosition);
                 }
 
-                last_line.signs.push(sign);
+                last_word.signs.push(sign);
 
              }
              //ignore other tokens
