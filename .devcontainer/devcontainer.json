@@ -30,6 +30,6 @@
 
 	// For git authentication with ssh keys
 	"mounts": [
-		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly"
+		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,readonly"
 	]
 }
