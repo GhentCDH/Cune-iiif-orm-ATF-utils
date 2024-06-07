@@ -4,6 +4,8 @@ This contains TypeScript functions which help when working with [ATF](http://ora
 
 More specifically it contains a tokenizer to split ATF contents into separate characters. See [here](https://gitlab.com/fcgl/annotator-showcase/-/blame/main/js/annotatorfunctions.js?page=2#L1098) and [here](https://github.com/ElectronicBabylonianLiterature/ebl-frontend/tree/4644dee9118484aa675cd37c3b6230e015760d86/src/transliteration/domain) for similar projects.
 
+![Screenshot of the atf viewer](./media/atf.png)
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
@@ -43,4 +45,6 @@ npm run test:unit
 
 ## Credits
 
-Developed at GhentCDH
+Development by [GhentCDH - Ghent University](https://www.ghentcdh.ugent.be/).
+
+Funded by the [GhentCDH research projects](https://www.ghentcdh.ugent.be/projects).
