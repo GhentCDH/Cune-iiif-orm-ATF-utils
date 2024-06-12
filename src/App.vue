@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ATFTokenizer from './components/ATFTokenizer.vue';
 
-import { ref,watch } from 'vue';
+import { ref } from 'vue';
 
 const selected = ref([]);
 

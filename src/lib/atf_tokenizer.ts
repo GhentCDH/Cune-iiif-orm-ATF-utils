@@ -25,7 +25,7 @@ type Line = {
     words: Word[];
 };
 
-type LineSelector = Omit<Line, 'characterPosition'>;
+//type LineSelector = Omit<Line, 'characterPosition'>;
 
 type Part = {
     name: string;
@@ -47,11 +47,13 @@ class ATFTokenizer {
     private setupRules() {
 
         //tablet part indication @obverse, @reverse, @edge
+        // eslint-disable-next-line
         this.tokenizer.rule(/\@tablet/, (ctx, match) => {
             ctx.ignore();
         });
 
         //tablet part indication @obverse, @reverse, @edge
+        // eslint-disable-next-line no-useless-escape
         this.tokenizer.rule(/(\@)(.+)/, (ctx, match) => {
             ctx.accept('tablet_part', match[2]);
         });
@@ -83,6 +85,7 @@ class ATFTokenizer {
         });
 
         //tablet sign delimeted by {} e.g. KI ur-{gisz}GIGIR
+        // eslint-disable-next-line
         this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+#?\}?/, (ctx, match) => {
             ctx.accept('tablet_sign', match[0]);
         });
@@ -93,23 +96,24 @@ class ATFTokenizer {
         });
 
         //Sign separators
+        // eslint-disable-next-line
         this.tokenizer.rule(/[.<>\-\[\]\?;\#/]+/, (ctx, match) => {
             ctx.accept('tablet_sign_separator', match[2]);
         });
 
-        this.tokenizer.rule(/\r?\n/, (ctx, match) => {
+        this.tokenizer.rule(/\r?\n/, (ctx, ) => {
             //ctx.accept('newline', match);
             ctx.ignore();
         });
 
         this.tokenizer.rule(/.+/, (ctx, match) => {
-            console.log('Unmatched text: ', match);
+            console.log('Unmatched, unexpected text: ', match);
             ctx.accept('line', match);
         });
     }
 
     tokenize(atfString: string) {
-        let tablet: Tablet = {
+        const tablet: Tablet = {
             parts: []
         };
 
@@ -117,23 +121,23 @@ class ATFTokenizer {
         this.tokenizer.tokens().forEach((token) => {
 
             if (token.type === 'tablet_part') {
-                let part = {
+                const part = {
                     name: token.value,
                     lines: []
                 } as Part;
                 tablet.parts.push(part);
             } else if (token.type === 'tablet_line_number') {
-                let last_part = tablet.parts[tablet.parts.length - 1];
-                let line = {
+                const last_part = tablet.parts[tablet.parts.length - 1];
+                const line = {
                     lineNumber: token.value[0],
                     characterPosition: token.pos,
                     original_text: token.value[1],
                     words: []} as Line;
                 last_part.lines.push(line);
             } else if (token.type === 'tablet_word_separator') {
-                let last_part = tablet.parts[tablet.parts.length - 1];
-                let last_line = last_part.lines[last_part.lines.length - 1];
-                let word = {
+                const last_part = tablet.parts[tablet.parts.length - 1];
+                const last_line = last_part.lines[last_part.lines.length - 1];
+                const word = {
                     characterPosition: token.pos,
                     text: token.value,
                     wordNumber: last_line.words.length + 1,
@@ -141,11 +145,11 @@ class ATFTokenizer {
                 } as Word;
                 last_line.words.push(word);
             } else if (token.type === 'tablet_sign') {
-                let last_part = tablet.parts[tablet.parts.length - 1];
-                let last_line = last_part.lines[last_part.lines.length - 1];
-                let last_word = last_line.words[last_line.words.length - 1];
+                const last_part = tablet.parts[tablet.parts.length - 1];
+                const last_line = last_part.lines[last_part.lines.length - 1];
+                const last_word = last_line.words[last_line.words.length - 1];
 
-                let sign = {
+                const sign = {
                     characterPosition: token.pos,
                     text: token.value,
                     signNumber: last_word.signs.length + 1
@@ -154,7 +158,7 @@ class ATFTokenizer {
                 if (last_word.signs.length === 0) {
                     sign.prefix = '';
                 } else {
-                    let last_sign = last_word.signs[last_word.signs.length - 1];
+                    const last_sign = last_word.signs[last_word.signs.length - 1];
                     sign.prefix = atfString.substring(last_sign.characterPosition + last_sign.text.length, sign.characterPosition);
                 }
 

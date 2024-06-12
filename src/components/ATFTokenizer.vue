@@ -1,17 +1,17 @@
 <template>
 
 <div>
-    <div v-for="part in tokenized.parts">
+    <div v-for="(part, part_index) in tokenized.parts" :key="part_index">
         <b>{{ part.name }}</b>
-        <div class="part" v-for="line in part.lines">
+        <div class="part" v-for="(line, line_index) in part.lines" :key="line_index">
             
             <div class="line">
                 <div class="gutter">{{ line.lineNumber }}.</div>
                 <div class="line-text">
-                    <span v-for="word in line.words">
+                    <span v-for="(word,word_index) in line.words" :key="word_index">
                         <span class="word">
-                            <span v-for="(sign, index) in word.signs">
-                            {{ sign.prefix }}<span  
+                            <span v-for="(sign, sign_index) in word.signs" :key="sign_index">
+                            {{ sign.prefix }}<span 
                             v-on:mouseleave="(event) => onDeselect(event,sign)" 
                             v-on:mouseover="(event) => onSelect(event,sign)" class="sign">{{ sign.text }}</span>{{ sign.suffix }}</span>
                         </span>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRef } from 'vue';
+import { computed, toRef } from 'vue';
 import {ATFTokenizer} from '../lib/atf_tokenizer.ts';
 
 const props = defineProps({
@@ -38,11 +38,13 @@ const emit = defineEmits({
   selected: (sign) => {
     // return `true` or `false` to indicate
     // validation pass / fail
+    console.log('selected',sign);
     return true;
   },
   deselected: (sign) => {
     // return `true` or `false` to indicate
     // validation pass / fail
+    console.log('deselected',sign);
     return true;
   }
 })
