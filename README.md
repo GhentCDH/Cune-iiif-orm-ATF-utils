@@ -2,9 +2,25 @@
 
 This contains TypeScript functions which help when working with [ATF](http://oracc.museum.upenn.edu/doc/help/editinginatf/), a semi-standardized text markup format used by the [Cuneiform Digital Library Initiative](https://cdli.ucla.edu) as a way to transcribe the contents of [cuniform](https://en.wikipedia.org/wiki/Cuneiform) tablets.
 
-More specifically it contains a tokenizer to split ATF contents into separate characters. See [here](https://gitlab.com/fcgl/annotator-showcase/-/blame/main/js/annotatorfunctions.js?page=2#L1098) and [here](https://github.com/ElectronicBabylonianLiterature/ebl-frontend/tree/4644dee9118484aa675cd37c3b6230e015760d86/src/transliteration/domain) for similar projects.
+More specifically it contains a tokenizer to split ATF contents into separate characters. See [here](https://gitlab.com/fcgl/annotator-showcase/-/blame/main/js/annotatorfunctions.js?page=2#L1098) and [here](https://github.com/ElectronicBabylonianLiterature/ebl-frontend/tree/4644dee9118484aa675cd37c3b6230e015760d86/src/transliteration/domain) for similar projects. https://github.com/cdli-gh
+
+https://cdli.mpiwg-berlin.mpg.de/search?f[provenience][]=Sippar-Amnanum%20(mod.%20Tell%20ed-Der)
 
 ![Screenshot of the atf viewer](./media/atf.png)
+
+
+## ATF files
+
+The [Cuniform Digital Library Initiative](https://cdli.mpiwg-berlin.mpg.de/) is a great resource and has a collection of ATF files. To export the ATF data into a single file call the following using the [CDLI API client](https://github.com/cdli-gh/framework-api-client):
+
+````bash
+npm install -g https://github.com/cdli-gh/framework-api-client
+npx cdli export \
+  --host https://cdli.mpiwg-berlin.mpg.de/ \
+  --entities inscriptions \
+  --format atf \
+  --output-file artifacts.atf
+````
 
 ## Recommended IDE Setup
 

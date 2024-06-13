@@ -1,0 +1,478 @@
+[
+    {
+      "named entity": "Babala",
+      "atf-form": "ba-ba-la",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Abi-tab?",
+      "atf-form": "a-bi-tab",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-tu-u3-ti?",
+      "atf-form": "i3-li2-tu-u3-ti",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ku-Nin_ubur",
+      "atf-form": "KU3-{d}NIN.SZUBUR",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ak_aya",
+      "atf-form": "{I}ak-sza-a-a",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Lugal-Marad",
+      "atf-form": "{d}LUGAL.MAR2.DA",
+      "entity-type": "Divine name"
+    },
+    {
+      "named entity": "Sumu-la-El",
+      "atf-form": "su-mu-la-el3",
+      "entity-type": "Royal name"
+    },
+    {
+      "named entity": "S”n-lidi_",
+      "atf-form": "{d}EN.ZU-li-di-isz",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-i_meanni",
+      "atf-form": "i3-li2-isz-me-a-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ili_u-ibbi_u",
+      "atf-form": "DINGIR-szu-i-bi-szu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Me_lanni",
+      "atf-form": "me-esz-la-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ili_u-a_i_u",
+      "atf-form": "i3-li2-szu-SZESZ-szu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Zapum?",
+      "atf-form": "ZA-PU-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-ennam",
+      "atf-form": "i3-li2-en-nam",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-n__ir",
+      "atf-form": "DINGIR-na-_i-ir",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Kazallu",
+      "atf-form": "ka-zal-lu{ki}",
+      "entity-type": "Geographic name"
+    },
+    {
+      "named entity": "Ilum-bani",
+      "atf-form": "DINGIR-ba-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Wan-x-amma",
+      "atf-form": "wa-an-x-am-ma",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-ennam",
+      "atf-form": "{d}EN.ZU-en-nam",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "_umi-a_iya",
+      "atf-form": "szu-mi-a-hi-ia",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Irra-bani",
+      "atf-form": "ir3-ra-ba-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-muballi_",
+      "atf-form": "{d}EN.ZU-mu-ba-li2-it,",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ana_-S”n",
+      "atf-form": "a-na-ah-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-i_enam",
+      "atf-form": "{d}EN.ZU-i-sze-na-am",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "A_u-waqar",
+      "atf-form": "a-hu-wa-qar",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "_ipum",
+      "atf-form": "hi-pu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Nabi-S”n",
+      "atf-form": "na-bi-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "N_r-_ama_",
+      "atf-form": "nu-ur2-{d}UTU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”nya",
+      "atf-form": "{d}EN.ZU-ia",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Abu-_ipum",
+      "atf-form": "a-bu-hi-pu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Arwium",
+      "atf-form": "ar-wi-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Warad-S”n",
+      "atf-form": "IR11-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Im-Mu_",
+      "atf-form": "{A.ENGUR}IM.{d}MUSZ",
+      "entity-type": "River name"
+    },
+    {
+      "named entity": "N_r-I_tar",
+      "atf-form": "nu-ur2-isz8-tar2",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-a_rani",
+      "atf-form": "i3-li2-asz-ra-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "__la_u-bal__u",
+      "atf-form": "s,i-la-szu-ba-la-t,u",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Sutžm",
+      "atf-form": "{I}su-tu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Tabni-I_tar",
+      "atf-form": "{I}tab-ni-isz8-tar2",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Yamsi-El",
+      "atf-form": "ia-am-si-el3",
+      "entity-type": "Royal name"
+    },
+    {
+      "named entity": "Ekurra-NIZA",
+      "atf-form": "e2-kur9-ra-NI-ZA",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "R_maya",
+      "atf-form": "ri-ma-ia",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "__-Enlil",
+      "atf-form": "szu-{d}EN.LIL2",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "R__-Lulu",
+      "atf-form": "ri-isz-lu-lu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Dagan-malik",
+      "atf-form": "{d}DA.GAN-ma-lik",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "_ull_num",
+      "atf-form": "_u-la-nu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Tata-x-um",
+      "atf-form": "ta-ta-x-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Nabi-il__u",
+      "atf-form": "na-bi-i3-li2-_u",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Arnabum",
+      "atf-form": "ar-na-bu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "_unu-ilu",
+      "atf-form": "_u-nu-i-lu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ilum-malik",
+      "atf-form": "DINGIR-ma-lik",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "A_um-il__u",
+      "atf-form": "{I}SZESZ-i3-li2-szu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "R__-ilum",
+      "atf-form": "ri-i_-DINGIR",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Issina",
+      "atf-form": "is-si-na",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-r_menni",
+      "atf-form": "{d}EN.ZU-re-me-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Enlil-issu",
+      "atf-form": "{d}EN.LIL2-i-su",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Nanaya-_arrat",
+      "atf-form": "{I}{d}na-na-a-_ar-ra-atÊ",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Igmil-S”n",
+      "atf-form": "ig-mi-il-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Sumu-num_im",
+      "atf-form": "su-mu:nu-um-hi-im",
+      "entity-type": "Royal name"
+    },
+    {
+      "named entity": "Aw_l-ilim",
+      "atf-form": "a-wi-il-DINGIR",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Qaranum",
+      "atf-form": "qa2-ra-nu-um",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Samiya",
+      "atf-form": "sa-mi-ia",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ur-gigir",
+      "atf-form": "UR-{gisz}GIGIR",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ibni-kiab",
+      "atf-form": "ib-ni-ki-a-ab",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "_ama_-bani",
+      "atf-form": "{d}UTU-ba-ni",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Butram-il_",
+      "atf-form": "bu-ut-ra-am-i3-li2",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Immaya",
+      "atf-form": "im-ma-i-a",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Mazam-il_",
+      "atf-form": "ma-za-am-i3-li2",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-r__",
+      "atf-form": "DINGIR-SIPA",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Imtisu",
+      "atf-form": "im-ti-su",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Aw_l-barra",
+      "atf-form": "LU2-bar-ra",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-r__",
+      "atf-form": "{d}EN.ZU-SIPA",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Namiya",
+      "atf-form": "na-mi-ia",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ana-S”n-_ubadda",
+      "atf-form": "a-na-{d}EN.ZU-T,UB-AD-DA",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-rabi",
+      "atf-form": "{d}EN.ZU-ra-bi",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Pa-Ningal",
+      "atf-form": "PA5-{d}NIN.GAL",
+      "entity-type": "River name"
+    },
+    {
+      "named entity": "S”n-bila-x",
+      "atf-form": "{d}EN.ZU-bi-la-x",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ur-Nintu",
+      "atf-form": "UR-{d}NIN.TU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ibbi-Lulu",
+      "atf-form": "i-bi-lu-lu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "P”_a-Lulu",
+      "atf-form": "pi4-sza-lu-lu",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "N_r-Kubi",
+      "atf-form": "nu-ur2-ku-bi",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-r__am",
+      "atf-form": "{d}EN.ZU-ri-s,a-am",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ibni-S”n",
+      "atf-form": "ib-ni-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-nada",
+      "atf-form": "{d}EN.ZU-na-da",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "S”n-x-z_rum",
+      "atf-form": "{d}EN.ZU-x-NUMUN",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Numu_da",
+      "atf-form": "{d}NU.MUSZ.DA",
+      "entity-type": "Divine name"
+    },
+    {
+      "named entity": "_alilum",
+      "atf-form": "{I}ha-li-lum",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ibbi-S”n",
+      "atf-form": "i-bi-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Pa-Imgur-Zi",
+      "atf-form": "PA5-im-gur-ZI",
+      "entity-type": "River name"
+    },
+    {
+      "named entity": "Il_-rabi",
+      "atf-form": "i3-li2-ra-bi",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Idin-S”n",
+      "atf-form": "i-din-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Il_-ba_ti",
+      "atf-form": "i3-li2-ba-asz-ti",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Ku-Irra",
+      "atf-form": "KU-ir3-ra",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "I_me-S”n",
+      "atf-form": "isz-me-{d}EN.ZU",
+      "entity-type": "Personal name"
+    },
+    {
+      "named entity": "Borsippa",
+      "atf-form": "bar-si2-pa{ki}",
+      "entity-type": "Geographic name"
+    },
+    {
+      "named entity": "Nannaya",
+      "atf-form": "{d}NANNA(|SZESZ.KI|)-a-a",
+      "entity-type": "Personal name"
+    }
+  ]
+  

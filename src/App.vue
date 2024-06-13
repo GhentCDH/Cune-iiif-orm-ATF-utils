@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import ATFTokenizer from './components/ATFTokenizer.vue';
+import { NamedEntity } from './types';
 
 import { ref } from 'vue';
 
 const selected = ref([]);
 
 const onSelect = (sign) => {
-    console.log('selected',sign);
+    console.log('selected app',sign);
     selected.value.push(sign);
 }
 
 const onDeselect = (sign) => {
-    console.log('deselected',sign);
-    //filter not working for some reason
-    selected.value = selected.value.filter((s) => s == sign);
+    console.log('deselecte app',sign);
+    selected.value = selected.value.filter((s) => s != sign);
 }
 
 const atf = ref('');
@@ -21,6 +21,13 @@ const atf = ref('');
 fetch('/data/O_219.atf')
     .then(response => response.text())
     .then(data => atf.value = data);
+
+const namedEntities = ref([]);
+    fetch('/data/name_entities.json')
+    .then(response => response.text())
+    .then(data => namedEntities.value = data as NamedEntity[]);
+
+
 
 </script>
 

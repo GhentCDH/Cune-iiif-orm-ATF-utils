@@ -3,38 +3,7 @@ import Tokenizr from 'tokenizr';
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
 
-type Sign = {
-    characterPosition: number;
-    text: string;
-    signNumber: number,
-    prefix?: string;
-    suffix?: string;
-};
 
-type Word = {
-    text: string;
-    signs: Sign[];
-    characterPosition: number;
-    wordNumber: number;
-};
-  
-type Line = {
-    characterPosition: number;
-    lineNumber: number;
-    original_text: string;
-    words: Word[];
-};
-
-//type LineSelector = Omit<Line, 'characterPosition'>;
-
-type Part = {
-    name: string;
-    lines: Line[];
-};
-
-type Tablet = {
-    parts: Part[];
-};
 
 class ATFTokenizer {
     private tokenizer: Tokenizr;

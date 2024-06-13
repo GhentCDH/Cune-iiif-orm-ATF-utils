@@ -3,17 +3,18 @@
 <div>
     <div v-for="(part, part_index) in tokenized.parts" :key="part_index">
         <b>{{ part.name }}</b>
-        <div class="part" v-for="(line, line_index) in part.lines" :key="line_index">
+        <div class="part" v-for="(line, line_index) in part.lines" v-on:click="(event) => onSelect(event,line)"  :key="line_index">
             
-            <div class="line">
+            <div :class="isSelected(line) ? 'line selected' : 'line'" >
                 <div class="gutter">{{ line.lineNumber }}.</div>
                 <div class="line-text">
                     <span v-for="(word,word_index) in line.words" :key="word_index">
-                        <span class="word">
-                            <span v-for="(sign, sign_index) in word.signs" :key="sign_index">
+                        <span :class="isSelected(word) ? 'word selected' : 'word' ">
+                            <span  v-for="(sign, sign_index) in word.signs" :key="sign_index">
                             {{ sign.prefix }}<span 
                             v-on:mouseleave="(event) => onDeselect(event,sign)" 
-                            v-on:mouseover="(event) => onSelect(event,sign)" class="sign">{{ sign.text }}</span>{{ sign.suffix }}</span>
+                            v-on:mouseover="(event) => onSelect(event,sign)" 
+                            :class="isSelected(sign) ? 'sign selected' : 'sign' ">{{ sign.text }}</span>{{ sign.suffix }}</span>
                         </span>
                         &nbsp;
                     </span>
@@ -25,7 +26,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, toRef } from 'vue';
 import {ATFTokenizer} from '../lib/atf_tokenizer.ts';
 
@@ -47,9 +48,12 @@ const emit = defineEmits({
     console.log('deselected',sign);
     return true;
   }
-})
+});
 
-
+const isSelected = (sign) => {
+    //return true;
+    return props.selected.includes(sign);
+}
 
 // event called when sign is hovered
 const onSelect = (event,sign) => {
@@ -60,7 +64,7 @@ const onDeselect = (event,sign) => {
     emit('deselected', sign);
 }
 
-const atf =toRef(props, 'atf')
+const atf = toRef(props, 'atf')
 
 const tokenized = computed(() => {
     const tokenizer = new ATFTokenizer();
@@ -68,14 +72,6 @@ const tokenized = computed(() => {
     return tokens;
 });
 
-
-/*
-const atf_json = computed(() => {
-    const tokenizer = new ATFTokenizer();
-    const tokens = tokenizer.tokenize(atf.value);
-    return JSON.stringify(tokens, null, 2);
-});
-*/
 </script>
 
 <style scoped>
@@ -94,6 +90,11 @@ const atf_json = computed(() => {
 .gutter {
     color: gray;
     user-select: none;
+}
+
+.selected{
+    color: green;
+    background-color: beige;
 }
 
 .sign{
