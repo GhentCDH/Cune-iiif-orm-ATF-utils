@@ -7,14 +7,12 @@ import { ref } from 'vue';
 const selectedATFElements = ref<ATFElement[]>([]);
 
 const onSelect = (element: ATFElement) => {
-    console.log('selected app',element);
     selectedATFElements.value.push(element);
 }
 
 const onDeselect = (element: ATFElement) => {
-    console.log('deselecte app',element);
     let index = selectedATFElements.value.indexOf(element);
-    selectedATFElements.value.splice(index,1);//  = selectedATFElements.value.filter((s: ATFElement) => s.characterPosition != element.characterPosition);
+    selectedATFElements.value.splice(index,1);
 }
 
 const atf = ref('');

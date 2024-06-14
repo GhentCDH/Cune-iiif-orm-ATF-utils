@@ -3,9 +3,9 @@ import Tokenizr from 'tokenizr';
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
 
+import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
-
-class ATFTokenizer {
+export class ATFTokenizer {
     private tokenizer: Tokenizr;
 
     constructor() {
@@ -107,6 +107,7 @@ class ATFTokenizer {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const last_line = last_part.lines[last_part.lines.length - 1];
                 const word = {
+                    id: '',
                     characterPosition: token.pos,
                     text: token.value,
                     wordNumber: last_line.words.length + 1,
@@ -143,4 +144,3 @@ class ATFTokenizer {
 
 }
 
-export  {ATFTokenizer, type Tablet,type Part,type Line, type Sign };

@@ -1,0 +1,12 @@
+
+
+Selectie via lijn en character index. Woord index 
+
+Bij selected lijn index; sign index en tekst zelf doorgeven
+prop word or sign level
+selected niet zelf bijhouden
+onmousover / leave events emitten
+Ook lijst met hovered state exposen
+onclick ook exposen en niet onselect: select is applicatie logica
+
+hoveredstyle en selectedstyle
