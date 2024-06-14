@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import ATFTokenizer from './components/ATFTokenizer.vue';
-import { NamedEntity } from './types';
+import {type ATFElement } from './types/CuniformTypes';
 
 import { ref } from 'vue';
 
-const selected = ref([]);
+const selectedATFElements = ref<ATFElement[]>([]);
 
-const onSelect = (sign) => {
-    console.log('selected app',sign);
-    selected.value.push(sign);
+const onSelect = (element: ATFElement) => {
+    console.log('selected app',element);
+    selectedATFElements.value.push(element);
 }
 
-const onDeselect = (sign) => {
-    console.log('deselecte app',sign);
-    selected.value = selected.value.filter((s) => s != sign);
+const onDeselect = (element: ATFElement) => {
+    console.log('deselecte app',element);
+    let index = selectedATFElements.value.indexOf(element);
+    selectedATFElements.value.splice(index,1);//  = selectedATFElements.value.filter((s: ATFElement) => s.characterPosition != element.characterPosition);
 }
 
 const atf = ref('');
@@ -25,9 +26,7 @@ fetch('/data/O_219.atf')
 const namedEntities = ref([]);
     fetch('/data/name_entities.json')
     .then(response => response.text())
-    .then(data => namedEntities.value = data as NamedEntity[]);
-
-
+    .then(data => namedEntities.value = JSON.parse(data));
 
 </script>
 
@@ -40,7 +39,7 @@ const namedEntities = ref([]);
 
       <textarea v-model="atf"></textarea>
 
-      <ATFTokenizer :atf="atf" :selected="selected" @selected="onSelect"  @deselected="onDeselect" />
+      <ATFTokenizer :atf="atf" :selected="selectedATFElements" @selected="onSelect"  @deselected="onDeselect" />
     
     </div>
     <pre>{{ selected }}</pre>

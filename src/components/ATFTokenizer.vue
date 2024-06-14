@@ -3,7 +3,7 @@
 <div>
     <div v-for="(part, part_index) in tokenized.parts" :key="part_index">
         <b>{{ part.name }}</b>
-        <div class="part" v-for="(line, line_index) in part.lines" v-on:click="(event) => onSelect(event,line)"  :key="line_index">
+        <div class="part" v-for="(line, line_index) in part.lines" v-on:click="() => toggleSelection(line)"  :key="line_index">
             
             <div :class="isSelected(line) ? 'line selected' : 'line'" >
                 <div class="gutter">{{ line.lineNumber }}.</div>
@@ -12,8 +12,8 @@
                         <span :class="isSelected(word) ? 'word selected' : 'word' ">
                             <span  v-for="(sign, sign_index) in word.signs" :key="sign_index">
                             {{ sign.prefix }}<span 
-                            v-on:mouseleave="(event) => onDeselect(event,sign)" 
-                            v-on:mouseover="(event) => onSelect(event,sign)" 
+                            v-on:mouseleave="(event) => onDeselect(sign)" 
+                            v-on:mouseover="(event) => onSelect(sign)" 
                             :class="isSelected(sign) ? 'sign selected' : 'sign' ">{{ sign.text }}</span>{{ sign.suffix }}</span>
                         </span>
                         &nbsp;
@@ -28,40 +28,39 @@
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
-import {ATFTokenizer} from '../lib/atf_tokenizer.ts';
+import {ATFTokenizer} from '../lib/atf_tokenizer';
+import type { ATFElement } from '@/types/CuniformTypes';
 
 const props = defineProps({
     selected: { type: Array, required: true },
     atf: { type: String, required: true }
 });
 
-const emit = defineEmits({
-  selected: (sign) => {
-    // return `true` or `false` to indicate
-    // validation pass / fail
-    console.log('selected',sign);
-    return true;
-  },
-  deselected: (sign) => {
-    // return `true` or `false` to indicate
-    // validation pass / fail
-    console.log('deselected',sign);
-    return true;
-  }
-});
 
-const isSelected = (sign) => {
-    //return true;
-    return props.selected.includes(sign);
+const emit = defineEmits<{
+  (event: 'selected', payload: ATFElement): void;
+  (event: 'deselected', payload: ATFElement): void;
+}>();
+
+const isSelected = (element: ATFElement) => {
+    return props.selected.includes(element);
+}
+
+const toggleSelection = (element: ATFElement) => {
+    if (props.selected.includes(element)) {
+        onDeselect(element);
+    } else {
+        onSelect(element);
+    }
 }
 
 // event called when sign is hovered
-const onSelect = (event,sign) => {
-    emit('selected', sign);
+const onSelect = (element: ATFElement) => {
+    emit('selected', element);
 }
 
-const onDeselect = (event,sign) => {
-    emit('deselected', sign);
+const onDeselect = (element: ATFElement) => {
+    emit('deselected', element);
 }
 
 const atf = toRef(props, 'atf')
