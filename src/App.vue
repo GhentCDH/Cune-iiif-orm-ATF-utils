@@ -6,6 +6,8 @@ import { ref } from 'vue';
 
 const selectedATFElements = ref<ATFElement[]>([]);
 
+const hoveredATFElements = ref<ATFElement[]>([]);
+
 const onSelect = (element: ATFElement) => {
     selectedATFElements.value.push(element);
 }
@@ -14,6 +16,26 @@ const onDeselect = (element: ATFElement) => {
     let index = selectedATFElements.value.indexOf(element);
     selectedATFElements.value.splice(index,1);
 }
+
+const onClick = (element: ATFElement) => {
+    console.log(element);
+    if (selectedATFElements.value.includes(element)) {
+        onDeselect(element);
+    } else {
+        onSelect(element);
+    }
+}
+
+const onMouseOver = (element: ATFElement) => {
+    hoveredATFElements.value.push(element);
+}
+
+const onMouseLeave = (element: ATFElement) => {
+    let index = hoveredATFElements.value.indexOf(element);
+    hoveredATFElements.value.splice(index,1);
+}
+
+const clickLevel = ref('sign');
 
 const atf = ref('');
 
@@ -29,19 +51,32 @@ const namedEntities = ref([]);
 </script>
 
 <template>
-  <main>
-    <div id="atf_demo">
-
-      <h3>ATF</h3>
-      <h3>highlighted</h3>
-
-      <textarea v-model="atf"></textarea>
-
-      <ATFTokenizer :atf="atf" :selected="selectedATFElements" @selected="onSelect"  @deselected="onDeselect" />
-    
-    </div>
-    <pre>{{ selected }}</pre>
-  </main>
+    <main>
+        <div id="atf_demo">
+            <h3>ATF</h3>
+            <h3>Highlighted</h3>
+            <textarea v-model="atf"></textarea>
+            <div>
+                <div style="float: right;">
+                    <b>Level: </b>
+                    <select  v-model="clickLevel">
+                    <option value="sign">Sign</option>
+                    <option value="word">Word</option>
+                    <option value="line">Line</option>
+                </select>
+                </div>
+                
+                <ATFTokenizer 
+                    :atf="atf"
+                    :hovered="hoveredATFElements" 
+                    :selected="selectedATFElements" 
+                    @click="onClick"
+                    :clickLevel="clickLevel"
+                    @mouseleave="onMouseLeave" 
+                    @mouseover="onMouseOver"  />
+            </div>
+        </div>
+    </main>
 </template>
 
 <style scoped>

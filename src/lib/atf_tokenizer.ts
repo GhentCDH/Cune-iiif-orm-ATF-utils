@@ -1,4 +1,4 @@
-import Tokenizr from 'tokenizr';
+import Tokenizr from 'tokenizr/src/tokenizr';
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
@@ -98,6 +98,7 @@ export class ATFTokenizer {
             } else if (token.type === 'tablet_line_number') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const line = {
+                    id: '',
                     lineNumber: token.value[0],
                     characterPosition: token.pos,
                     original_text: token.value[1],

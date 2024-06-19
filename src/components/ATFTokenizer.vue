@@ -3,17 +3,18 @@
 <div>
     <div v-for="(part, part_index) in tokenized.parts" :key="part_index">
         <b>{{ part.name }}</b>
-        <div class="part" v-for="(line, line_index) in part.lines" v-on:click="() => toggleSelection(line)"  :key="line_index">
+        <div class="part" v-for="(line, line_index) in part.lines" v-on:click="() => {if( clickLevel == 'line') { emit('click', line) }}"  :key="line_index">
             
             <div :class="isSelected(line) ? 'line selected' : 'line'" >
                 <div class="gutter">{{ line.lineNumber }}.</div>
                 <div class="line-text">
                     <span v-for="(word,word_index) in line.words" :key="word_index">
-                        <span :class="isSelected(word) ? 'word selected' : 'word' ">
+                        <span :class="isSelected(word) ? 'word selected' : 'word' "  v-on:click="() => {if(clickLevel == 'word') { emit('click', word) }}">
                             <span  v-for="(sign, sign_index) in word.signs" :key="sign_index">
-                            {{ sign.prefix }}<span 
-                            v-on:mouseleave="(event) => onDeselect(sign)" 
-                            v-on:mouseover="(event) => onSelect(sign)" 
+                            {{ sign.prefix }}<span
+                            v-on:click="() => {if(clickLevel == 'sign') { emit('click', sign) }}" 
+                            v-on:mouseleave="() => emit('mouseleave', line)" 
+                            v-on:mouseover="() => emit('mouseover', line)" 
                             :class="isSelected(sign) ? 'sign selected' : 'sign' ">{{ sign.text }}</span>{{ sign.suffix }}</span>
                         </span>
                         &nbsp;
@@ -32,35 +33,21 @@ import {ATFTokenizer} from '../lib/atf_tokenizer';
 import type { ATFElement } from '@/types/CuniformTypes';
 
 const props = defineProps({
-    selected: { type: Array, required: true },
-    atf: { type: String, required: true }
+    selected: { type: Array, required: false, default: []},
+    atf: { type: String, required: true },
+    hovered: { type: Array, required: false, default: []},
+    clickLevel: { type: String, required: false, default: 'word'}
 });
 
 
 const emit = defineEmits<{
-  (event: 'selected', payload: ATFElement): void;
-  (event: 'deselected', payload: ATFElement): void;
+  (event: 'mouseleave', payload: ATFElement): void;
+  (event: 'mouseover' , payload: ATFElement): void;
+  (event: 'click'     , payload: ATFElement): void;
 }>();
 
 const isSelected = (element: ATFElement) => {
     return props.selected.includes(element);
-}
-
-const toggleSelection = (element: ATFElement) => {
-    if (props.selected.includes(element)) {
-        onDeselect(element);
-    } else {
-        onSelect(element);
-    }
-}
-
-// event called when sign is hovered
-const onSelect = (element: ATFElement) => {
-    emit('selected', element);
-}
-
-const onDeselect = (element: ATFElement) => {
-    emit('deselected', element);
 }
 
 const atf = toRef(props, 'atf')

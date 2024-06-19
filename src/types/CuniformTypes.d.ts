@@ -5,11 +5,8 @@ export type ATFElement = {
 };
 
 export type Sign = ATFElement & {
-
     text: string;
     signNumber: number,
-    prefix?: string;
-    suffix?: string;
 };
 
 export type Word = ATFElement &  {

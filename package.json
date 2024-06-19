@@ -1,6 +1,6 @@
 {
-  "name": "atf-cuniform-utilities",
-  "version": "0.0.0",
+  "name": "cune-iiif-orm-atf-utils",
+  "version": "0.0.1",
   "private": false,
   "type": "module",
   "scripts": {
