@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ATFTokenizer from './components/ATFTokenizer.vue';
-import {type ATFElement } from './types/CuniformTypes';
+import type {ATFElement} from './types/CuniformTypes';
 
 import { ref } from 'vue';
 

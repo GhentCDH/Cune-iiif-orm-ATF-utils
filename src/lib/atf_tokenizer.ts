@@ -1,4 +1,4 @@
-import Tokenizr from 'tokenizr';
+import Tokenizr, {Token} from 'tokenizr';
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
@@ -87,7 +87,7 @@ export default class ATFTokenizer {
         };
 
         this.tokenizer.input(atfString);
-        this.tokenizer.tokens().forEach((token) => {
+        this.tokenizer.tokens().forEach((token: Token) => {
 
             if (token.type === 'tablet_part') {
                 const part = {
