@@ -1,4 +1,7 @@
-import Tokenizr, {Token} from 'tokenizr';
+import * as Tokenizr from 'tokenizr';
+
+import {Token} from 'tokenizr';
+
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
@@ -6,10 +9,10 @@ import Tokenizr, {Token} from 'tokenizr';
 import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
 export default class ATFTokenizer {
-    private tokenizer: Tokenizr;
+    private tokenizer: Tokenizr.default;
 
     constructor() {
-        this.tokenizer = new Tokenizr();
+        this.tokenizer = new Tokenizr.default();
         this.setupRules();
     }
 
