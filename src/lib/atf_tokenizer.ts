@@ -1,12 +1,11 @@
 import * as Tokenizr from 'tokenizr';
-
 import {Token} from 'tokenizr';
+import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
 
-import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
 export default class ATFTokenizer {
     private tokenizer: Tokenizr.default;

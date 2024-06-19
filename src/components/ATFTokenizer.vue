@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
-import {ATFTokenizer} from '../lib/atf_tokenizer';
+import ATFTokenizer from '../lib/atf_tokenizer';
 import type { ATFElement } from '@/types/CuniformTypes';
 
 const props = defineProps({
