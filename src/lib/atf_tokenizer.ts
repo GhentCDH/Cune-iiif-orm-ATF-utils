@@ -1,5 +1,4 @@
-import * as Tokenizr from 'tokenizr';
-import {Token} from 'tokenizr';
+import Tokenizr,  {Token} from 'tokenizr';
 import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
 
@@ -8,10 +7,10 @@ import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
 
 export default class ATFTokenizer {
-    private tokenizer: Tokenizr.default;
+    private tokenizer: Tokenizr;
 
     constructor() {
-        this.tokenizer = new Tokenizr.default();
+        this.tokenizer = new Tokenizr();
         this.setupRules();
     }
 
