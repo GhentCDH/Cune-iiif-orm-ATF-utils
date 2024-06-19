@@ -1,11 +1,11 @@
-import Tokenizr from 'tokenizr/src/tokenizr';
+import Tokenizr from 'tokenizr';
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
 // for a description of the ATF format.
 
 import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
 
-export class ATFTokenizer {
+export default class ATFTokenizer {
     private tokenizer: Tokenizr;
 
     constructor() {
