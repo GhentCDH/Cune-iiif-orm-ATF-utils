@@ -1,5 +1,5 @@
 import Tokenizr,  {Token} from 'tokenizr';
-import type{ Line, Part, Sign,  Tablet,  Word } from '../types/CuniformTypes';
+import type{ ATFLine, ATFPart, ATFSign,  Tablet,  ATFWord } from '../types/CuniformTypes';
 
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
@@ -93,28 +93,31 @@ export default class ATFTokenizer {
             if (token.type === 'tablet_part') {
                 const part = {
                     name: token.value,
+                    cssClass: 'atf_part',
                     lines: []
-                } as Part;
+                } as ATFPart;
                 tablet.parts.push(part);
             } else if (token.type === 'tablet_line_number') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const line = {
                     id: '',
+                    cssClass: 'atf_line',
                     lineNumber: token.value[0],
                     characterPosition: token.pos,
                     original_text: token.value[1],
-                    words: []} as Line;
+                    words: []} as ATFLine;
                 last_part.lines.push(line);
             } else if (token.type === 'tablet_word_separator') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const last_line = last_part.lines[last_part.lines.length - 1];
                 const word = {
                     id: '',
+                    cssClass: 'atf_word',
                     characterPosition: token.pos,
                     text: token.value,
                     wordNumber: last_line.words.length + 1,
                     signs: [],
-                } as Word;
+                } as ATFWord;
                 last_line.words.push(word);
             } else if (token.type === 'tablet_sign') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
@@ -123,9 +126,10 @@ export default class ATFTokenizer {
 
                 const sign = {
                     characterPosition: token.pos,
+                    cssClass: 'atf_sign',
                     text: token.value,
                     signNumber: last_word.signs.length + 1
-                } as Sign;
+                } as ATFSign;
 
                 if (last_word.signs.length === 0) {
                     sign.prefix = '';

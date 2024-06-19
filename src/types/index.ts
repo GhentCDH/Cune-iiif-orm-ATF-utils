@@ -5,9 +5,9 @@ export type {
 
 
 export type {
-    Sign,
-    Word,
-    Line,
-    Part,
+    ATFSign,
+    ATFWord,
+    ATFLine,
+    ATFPart,
     Tablet
 } from "./CuniformTypes";

@@ -27,11 +27,14 @@ const onClick = (element: ATFElement) => {
 }
 
 const onMouseOver = (element: ATFElement) => {
-    hoveredATFElements.value.push(element);
+    let includes = hoveredATFElements.value.includes(element);
+    if (!includes) hoveredATFElements.value.push(element);
 }
 
 const onMouseLeave = (element: ATFElement) => {
+    
     let index = hoveredATFElements.value.indexOf(element);
+    console.log('leave', element, index,  hoveredATFElements.value.length);
     hoveredATFElements.value.splice(index,1);
 }
 
@@ -44,10 +47,9 @@ fetch('/data/O_219.atf')
     .then(data => atf.value = data);
 
 const namedEntities = ref([]);
-    fetch('/data/name_entities.json')
+    fetch('/data/named_entities.json')
     .then(response => response.text())
     .then(data => namedEntities.value = JSON.parse(data));
-
 </script>
 
 <template>
@@ -71,7 +73,7 @@ const namedEntities = ref([]);
                     :hovered="hoveredATFElements" 
                     :selected="selectedATFElements" 
                     @click="onClick"
-                    :clickLevel="clickLevel"
+                    :level="clickLevel"
                     @mouseleave="onMouseLeave" 
                     @mouseover="onMouseOver"  />
             </div>

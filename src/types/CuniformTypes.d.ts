@@ -2,36 +2,37 @@
 export type ATFElement = {
     characterPosition: number;
     id: string;
+    cssClass: string;
 };
 
-export type Sign = ATFElement & {
+export type ATFSign = ATFElement & {
     text: string;
     signNumber: number,
     prefix?: string;
     suffix?: string;
 };
 
-export type Word = ATFElement &  {
+export type ATFWord = ATFElement &  {
     text: string;
-    signs: Sign[];
+    signs: ATFSign[];
     
     wordNumber: number;
 };
   
-export type Line = ATFElement &  {
+export type ATFLine = ATFElement &  {
     lineNumber: number;
     original_text: string;
-    words: Word[];
+    words: ATFWord[];
 };
 
 //export type LineSelector = Omit<Line, 'characterPosition'>;
 
-export type Part =  {
+export type ATFPart =  {
     name: string;
-    lines: Line[];
+    lines: ATFLine[];
 };
 
 export type Tablet = {
-    parts: Part[];
+    parts: ATFPart[];
 };
 
