@@ -39,9 +39,9 @@ import ATFTokenizer from '../lib/atf_tokenizer';
 import type {ATFElement, ATFLine, ATFWord, ATFSign} from '@/types/';
 
 const props = defineProps({
-    selected: { type: Array, required: false, default: []},
+    selected: { type: Set, required: false, default: new Set([])},
     atf: { type: String, required: true },
-    hovered: { type: Array, required: false, default: []},
+    hovered: { type: Set, required: false, default: new Set([])},
     level: { type: String, required: false, default: 'sign'}
 });
 
@@ -65,11 +65,11 @@ const emit = defineEmits<{
 }>();
 
 const isSelected = (element: ATFElement) => {
-    return props.selected.includes(element);
+    return props.selected.has(element);
 }
 
 const isMouseOver = (element: ATFElement) => {
-    let hovered = props.hovered.includes(element);
+    let hovered = props.hovered.has(element);
     return hovered;
 }
 
@@ -83,8 +83,18 @@ const tokenized = computed(() => {
 
 </script>
 
-<style>
+<style scoped>
+b {
+    font-weight: bold;
+}
 
+h3 {
+    margin: 0;
+    padding: 0;
+}
+</style>
+
+<style>
 .atf_line{
     display: grid;
     grid-template-columns: 2rem auto;
@@ -95,11 +105,6 @@ const tokenized = computed(() => {
 .atf_line_gutter {
     color: gray;
     user-select: none;
-}
-
-.atf_selected{
-    color: green;
-    background-color: beige;
 }
 
 .atf_sign{
@@ -124,13 +129,8 @@ const tokenized = computed(() => {
     border-bottom: 1px solid red;
 }
 
-
-b {
-    font-weight: bold;
-}
-
-h3 {
-    margin: 0;
-    padding: 0;
+.atf_selected{
+    color: green;
+    background-color: beige;
 }
 </style>

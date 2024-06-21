@@ -4,22 +4,21 @@ import type {ATFElement} from './types/CuniformTypes';
 
 import { ref } from 'vue';
 
-const selectedATFElements = ref<ATFElement[]>([]);
+const selectedATFElements = ref<Set<ATFElement>>(new Set([]));
 
-const hoveredATFElements = ref<ATFElement[]>([]);
+const hoveredATFElements = ref<Set<ATFElement>>(new Set([]));
 
 const onSelect = (element: ATFElement) => {
-    selectedATFElements.value.push(element);
+    selectedATFElements.value.add(element);
 }
 
 const onDeselect = (element: ATFElement) => {
-    let index = selectedATFElements.value.indexOf(element);
-    selectedATFElements.value.splice(index,1);
+    selectedATFElements.value.delete(element);
 }
 
 const onClick = (element: ATFElement) => {
     console.log(element);
-    if (selectedATFElements.value.includes(element)) {
+    if (selectedATFElements.value.has(element)) {
         onDeselect(element);
     } else {
         onSelect(element);
@@ -27,15 +26,11 @@ const onClick = (element: ATFElement) => {
 }
 
 const onMouseOver = (element: ATFElement) => {
-    let includes = hoveredATFElements.value.includes(element);
-    if (!includes) hoveredATFElements.value.push(element);
+    hoveredATFElements.value.add(element);
 }
 
 const onMouseLeave = (element: ATFElement) => {
-    
-    let index = hoveredATFElements.value.indexOf(element);
-    console.log('leave', element, index,  hoveredATFElements.value.length);
-    hoveredATFElements.value.splice(index,1);
+    hoveredATFElements.value.delete(element);
 }
 
 const clickLevel = ref('sign');
