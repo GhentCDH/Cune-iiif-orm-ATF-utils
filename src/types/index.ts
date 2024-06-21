@@ -5,6 +5,7 @@ export type {
 
 
 export type {
+    ATFElement,
     ATFSign,
     ATFWord,
     ATFLine,
