@@ -2,22 +2,25 @@
 import ATFTokenizer from './components/ATFTokenizer.vue';
 import type {ATFElement} from './types/CuniformTypes';
 
-import { ref } from 'vue';
+import {  ref,watch } from 'vue';
 
 const selectedATFElements = ref<Set<ATFElement>>(new Set([]));
 
 const hoveredATFElements = ref<Set<ATFElement>>(new Set([]));
 
+const allATFElements = ref<ATFElement[]>(new Array<ATFElement>());
+
 const onSelect = (element: ATFElement) => {
+    console.log("onSelect",element);
     selectedATFElements.value.add(element);
 }
 
 const onDeselect = (element: ATFElement) => {
+    console.log("onDeselect",element);
     selectedATFElements.value.delete(element);
 }
 
 const onClick = (element: ATFElement) => {
-    console.log(element);
     if (selectedATFElements.value.has(element)) {
         onDeselect(element);
     } else {
@@ -32,6 +35,9 @@ const onMouseOver = (element: ATFElement) => {
 const onMouseLeave = (element: ATFElement) => {
     hoveredATFElements.value.delete(element);
 }
+const onTokenized = (elements: Array<ATFElement>) => {
+    allATFElements.value = elements;
+}
 
 const clickLevel = ref('sign');
 
@@ -45,7 +51,35 @@ const namedEntities = ref([]);
     fetch('/data/named_entities.json')
     .then(response => response.text())
     .then(data => namedEntities.value = JSON.parse(data));
+
+watch(allATFElements, (newValue, oldValue) => {
+
+    // Code to execute when allElements changes
+    const selectByIndex = [[1,1],[2,2,2],[3,1,2,2]];
+
+    for (let i = 0; i < newValue.length; i++) {
+    const atfElement = newValue[i] as ATFElement;
+    for (let j = 0; j < selectByIndex.length; j++) {
+            const selector = selectByIndex[j];
+            if(selector.length != atfElement.selector.length) continue;
+            console.log("selector",selector,"atfElement",atfElement.selector);
+            let match = true;
+            for(let k = 0 ; k < Math.min(selector.length) && match  ; k++){
+                if(atfElement.selector[k] != selector[k]){
+                    match = false;
+                    break;
+                }
+        }
+        if(match){
+            onSelect(atfElement);
+            break;
+        }
+        }
+    }
+});
+
 </script>
+
 
 <template>
     <main>
@@ -68,14 +102,26 @@ const namedEntities = ref([]);
                     :hovered="hoveredATFElements" 
                     :selected="selectedATFElements"
                     :entities="namedEntities"
-                    @click="onClick"
+                    :elements="allATFElements"
+                    
                     :level="clickLevel"
+                    @tokenized="onTokenized"
+                    @click="onClick"
                     @mouseleave="onMouseLeave" 
                     @mouseover="onMouseOver"  />
+
             </div>
         </div>
     </main>
 </template>
+
+<style>
+
+.atf_part{
+    margin-bottom: 1rem;
+}
+
+</style>
 
 <style scoped>
 #atf_demo {
@@ -84,6 +130,7 @@ const namedEntities = ref([]);
     grid-template-columns: 1fr 2fr;
     gap: 2rem;
 }
+
 
 pre {
     height: 30vh;

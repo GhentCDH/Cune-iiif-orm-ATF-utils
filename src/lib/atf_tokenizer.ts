@@ -89,7 +89,8 @@ export default class ATFTokenizer {
             characterPosition: 0,
             id: '',
             text: atfString,
-            cssClass: 'atf_tablet'
+            cssClass: 'atf_tablet',
+            selector: []
         };
 
         this.tokenizer.input(atfString);
@@ -103,7 +104,8 @@ export default class ATFTokenizer {
                     id: token.value,
                     cssClass: 'atf_part',
                     text: token.value,
-                    lines: []
+                    lines: [],
+                    selector: [tablet.parts.length + 1],
                 } as ATFPart;
                 tablet.parts.push(part);
             } else if (token.type === 'tablet_line_number') {
@@ -111,9 +113,10 @@ export default class ATFTokenizer {
                 const line = {
                     id: '',
                     cssClass: 'atf_line',
-                    lineNumber: token.value[0],
+                    lineNumber: last_part.lines.length + 1,
                     characterPosition: token.pos,
                     text: token.value[1],
+                    selector: [tablet.parts.length,last_part.lines.length + 1],
                     words: []} as ATFLine;
                 last_part.lines.push(line);
             } else if (token.type === 'tablet_word_separator') {
@@ -125,6 +128,7 @@ export default class ATFTokenizer {
                     characterPosition: token.pos,
                     text: '',
                     wordNumber: last_line.words.length + 1,
+                    selector: [tablet.parts.length ,last_part.lines.length,last_line.words.length + 1],
                     signs: [],
                 } as ATFWord;
                 last_line.words.push(word);
@@ -137,7 +141,8 @@ export default class ATFTokenizer {
                     characterPosition: token.pos,
                     cssClass: 'atf_sign',
                     text: token.value,
-                    signNumber: last_word.signs.length + 1
+                    signNumber: last_word.signs.length + 1,
+                    selector: [tablet.parts.length,last_part.lines.length,last_line.words.length,last_word.signs.length + 1],
                 } as ATFSign;
 
                 if (last_word.signs.length === 0) {

@@ -1,8 +1,8 @@
 <template>
 
 <div>
-    <div v-for="(part, part_index) in tokenized.parts" :key="part_index">
-        <b>{{ part.name }}</b>
+    <div v-for="(part, part_index) in tokenized.parts" :key="part_index" :class="cssClassForElement(part)">
+        <b>{{ part.id }}</b>
         <div v-for="(line, line_index) in part.lines" :key="line_index"
             :class="cssClassForElement(line)" 
             v-on:click="() => {if( level == 'line') { emit('click', line) }}"
@@ -40,13 +40,33 @@ import ATFTokenizer from '../lib/atf_tokenizer';
 import type {ATFElement, ATFNamedEntity} from '@/types/';
 
 const props = defineProps({
+
+    /**
+     * The `atf` prop represents the ATF (Akkadian Text Format) string that needs to be tokenized.
+     * 
+     * @type {String}
+     * @required
+     */
     atf: { type: String, required: true },
+
     hovered: { type: Set, required: false, default: new Set([])},
+
     selected: { type: Set, required: false, default: new Set([])},
-    entities: { type: Array, required: false, default: []},    
+
+    elements: { type: Array, required: false, default: []},
+
+    entities: { type: Array, required: false, default: []},
+
+
+    /**
+     * The level prop specifies the level of selection or hovering: .
+     * 
+     * @type {String}
+     * @default 'sign'
+     * @required false
+     */
     level: { type: String, required: false, default: 'sign'}
 });
-
 
 /**
  * Returns the CSS class for the given ATF element.
@@ -62,15 +82,6 @@ const cssClassForElement = (element: ATFElement) : string => {
     return cssClass;
 }
 
-const namedEntitiesMap = computed(() : Map<string,ATFNamedEntity> => {
-    const map = new Map<string,ATFNamedEntity>();
-    for (const entity of props.entities) {
-        const namedEntity = entity as ATFNamedEntity;
-        map.set(namedEntity.atf_form, namedEntity);
-    }
-    return map;
-});
-
 const titleForElement = (element: ATFElement) : string => {
     let title = "";
     if (isNamedEntity(element)) {
@@ -84,6 +95,7 @@ const emit = defineEmits<{
   (event: 'mouseleave', payload: ATFElement): void;
   (event: 'mouseover' , payload: ATFElement): void;
   (event: 'click'     , payload: ATFElement): void;
+  (event: 'tokenized' , payload: Array<ATFElement>): void;
 }>();
 
 const isSelected = (element: ATFElement) : boolean => {
@@ -98,11 +110,41 @@ const isNamedEntity = (element: ATFElement) : boolean => {
 
 const atf = toRef(props, 'atf')
 
+const namedEntitiesMap = computed(() : Map<string,ATFNamedEntity> => {
+    const map = new Map<string,ATFNamedEntity>();
+    for (const entity of props.entities) {
+        const namedEntity = entity as ATFNamedEntity;
+        map.set(namedEntity.atf_form, namedEntity);
+    }
+    return map;
+});
+
 const tokenized = computed(() => {
     const tokenizer = new ATFTokenizer();
-    const tokens = tokenizer.tokenize(atf.value);
+    const tokens = tokenizer.tokenize(props.atf);
+
+    // Clear the elements array
+    let elements = new Array<ATFElement>();
+
+    // add all elements to the elements array
+    for (const part of tokens.parts) {
+        elements.push(part);
+        for (const line of part.lines) {
+            elements.push(line);
+            for (const word of line.words) {
+                elements.push(word);
+                for (const sign of word.signs) {
+                    elements.push(sign);
+                }
+            }
+        }
+    }
+
+    emit('tokenized', elements) 
+
     return tokens;
 });
+
 
 </script>
 

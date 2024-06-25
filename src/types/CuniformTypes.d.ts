@@ -5,11 +5,30 @@ export type ATFNamedEntity = {
     name: string;
 };
 
+/**
+ * Represents an ATF (Akkadian Text Format) element.
+ */
 export type ATFElement = {
+    /**
+     * The character position of the element in the original ATF text.
+     */
     characterPosition: number;
+    /**
+     * The unique identifier of the element.
+     */
     id: string;
+    /**
+     * The text content of the element.
+     */
     text: string;
+    /**
+     * The CSS class associated with the element.
+     */
     cssClass: string;
+    /**
+     * An array of integers representing the selector of the element.
+     */
+    selector: Array<number>;
 };
 
 export type ATFSign = ATFElement & {
