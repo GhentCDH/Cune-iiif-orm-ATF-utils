@@ -66,7 +66,8 @@ const namedEntities = ref([]);
                 <ATFTokenizer 
                     :atf="atf"
                     :hovered="hoveredATFElements" 
-                    :selected="selectedATFElements" 
+                    :selected="selectedATFElements"
+                    :entities="namedEntities"
                     @click="onClick"
                     :level="clickLevel"
                     @mouseleave="onMouseLeave" 

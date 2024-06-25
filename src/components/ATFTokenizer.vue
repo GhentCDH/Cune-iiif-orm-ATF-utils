@@ -13,7 +13,7 @@
             
                 <div class="atf_line_text">
                     <span v-for="(word,word_index) in line.words" :key="word_index">
-                        <span :class="cssClassForElement(word)"  
+                        <span :class="cssClassForElement(word)"  :title="titleForElement(word)" 
                         v-on:click="() => {if(level == 'word') { emit('click', word) }}"
                         v-on:mouseleave="() => {if(level == 'word') {  emit('mouseleave', word) }}" 
                         v-on:mouseover="() =>{if(level == 'word') {  emit('mouseover', word) }}" >
@@ -36,12 +36,14 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
 import ATFTokenizer from '../lib/atf_tokenizer';
-import type {ATFElement, ATFLine, ATFWord, ATFSign} from '@/types/';
+
+import type {ATFElement, ATFNamedEntity} from '@/types/';
 
 const props = defineProps({
-    selected: { type: Set, required: false, default: new Set([])},
     atf: { type: String, required: true },
     hovered: { type: Set, required: false, default: new Set([])},
+    selected: { type: Set, required: false, default: new Set([])},
+    entities: { type: Array, required: false, default: []},    
     level: { type: String, required: false, default: 'sign'}
 });
 
@@ -51,11 +53,31 @@ const props = defineProps({
  * @param {ATFElement} element - The ATF element to get the CSS class for.
  * @returns {string} - The CSS class for the element.
  */
-const cssClassForElement = (element: ATFElement) => {
+const cssClassForElement = (element: ATFElement) : string => {
     let cssClass = element.cssClass;
     if(isMouseOver(element)) cssClass = cssClass + ' atf_hovered';
     if(isSelected(element))  cssClass = cssClass + ' atf_selected';
+    if(isNamedEntity(element))  cssClass = cssClass + ' atf_named_entity';
+
     return cssClass;
+}
+
+const namedEntitiesMap = computed(() : Map<string,ATFNamedEntity> => {
+    const map = new Map<string,ATFNamedEntity>();
+    for (const entity of props.entities) {
+        const namedEntity = entity as ATFNamedEntity;
+        map.set(namedEntity.atf_form, namedEntity);
+    }
+    return map;
+});
+
+const titleForElement = (element: ATFElement) : string => {
+    let title = "";
+    if (isNamedEntity(element)) {
+        const namedEntity = namedEntitiesMap.value.get(element.text) as ATFNamedEntity;
+        title =  namedEntity.name + " (" + namedEntity.type + ")";
+    }
+    return title;
 }
 
 const emit = defineEmits<{
@@ -64,13 +86,14 @@ const emit = defineEmits<{
   (event: 'click'     , payload: ATFElement): void;
 }>();
 
-const isSelected = (element: ATFElement) => {
+const isSelected = (element: ATFElement) : boolean => {
     return props.selected.has(element);
 }
-
-const isMouseOver = (element: ATFElement) => {
-    let hovered = props.hovered.has(element);
-    return hovered;
+const isMouseOver = (element: ATFElement) : boolean => {
+    return props.hovered.has(element);
+}
+const isNamedEntity = (element: ATFElement) : boolean => {
+   return namedEntitiesMap.value.has(element.text);
 }
 
 const atf = toRef(props, 'atf')
@@ -107,6 +130,13 @@ h3 {
     user-select: none;
 }
 
+.atf_named_entity {
+
+    border-bottom: 1px solid  blue !important;
+    color:  blue !important;
+    cursor:help !important;
+}
+
 .atf_sign{
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
@@ -118,7 +148,7 @@ h3 {
 }
 
 .atf_word {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid transparent;
     margin-bottom: 0.3rem;
     padding-bottom: 0.3rem;
     border-radius: 0.3rem;

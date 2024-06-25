@@ -7,8 +7,9 @@ export type {
 export type {
     ATFElement,
     ATFSign,
-    ATFWord,
+    ATFWord, 
     ATFLine,
     ATFPart,
-    Tablet
+    ATFTablet,
+    ATFNamedEntity,
 } from "./CuniformTypes";

@@ -1,5 +1,5 @@
 import Tokenizr,  {Token} from 'tokenizr';
-import type{ ATFLine, ATFPart, ATFSign,  Tablet,  ATFWord } from '../types/CuniformTypes';
+import type{ ATFLine, ATFPart, ATFSign,  ATFTablet,  ATFWord } from '../types/CuniformTypes';
 
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
@@ -82,18 +82,27 @@ export default class ATFTokenizer {
         });
     }
 
-    tokenize(atfString: string) {
-        const tablet: Tablet = {
-            parts: []
+    tokenize(atfString: string) : ATFTablet {
+
+        const tablet: ATFTablet = {
+            parts: [],
+            characterPosition: 0,
+            id: '',
+            text: atfString,
+            cssClass: 'atf_tablet'
         };
 
         this.tokenizer.input(atfString);
+
         this.tokenizer.tokens().forEach((token: Token) => {
 
             if (token.type === 'tablet_part') {
                 const part = {
-                    name: token.value,
+                    characterPosition: token.pos,
+                    partNumber: tablet.parts.length + 1,
+                    id: token.value,
                     cssClass: 'atf_part',
+                    text: token.value,
                     lines: []
                 } as ATFPart;
                 tablet.parts.push(part);
@@ -104,7 +113,7 @@ export default class ATFTokenizer {
                     cssClass: 'atf_line',
                     lineNumber: token.value[0],
                     characterPosition: token.pos,
-                    original_text: token.value[1],
+                    text: token.value[1],
                     words: []} as ATFLine;
                 last_part.lines.push(line);
             } else if (token.type === 'tablet_word_separator') {
@@ -114,7 +123,7 @@ export default class ATFTokenizer {
                     id: '',
                     cssClass: 'atf_word',
                     characterPosition: token.pos,
-                    text: token.value,
+                    text: '',
                     wordNumber: last_line.words.length + 1,
                     signs: [],
                 } as ATFWord;
@@ -139,11 +148,20 @@ export default class ATFTokenizer {
                 }
 
                 last_word.signs.push(sign);
-
              }
              //ignore other tokens
         });
 
+        //Now that we have all the tokens, we can reconstruct the text of the words
+        for(const part of tablet.parts) {
+            for(const line of part.lines) {
+                for(const word of line.words) {
+                    for(const sign of word.signs) {
+                        word.text += (sign.prefix || '') + sign.text + (sign.suffix || '');
+                    }
+                }
+            }
+        }
         
         return tablet;
     }
