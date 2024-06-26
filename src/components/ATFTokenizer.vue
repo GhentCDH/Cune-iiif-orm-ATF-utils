@@ -53,8 +53,6 @@ const props = defineProps({
 
     selected: { type: Set, required: false, default: new Set([])},
 
-    elements: { type: Array, required: false, default: []},
-
     entities: { type: Array, required: false, default: []},
 
 
@@ -174,9 +172,9 @@ h3 {
 
 .atf_named_entity {
 
-    border-bottom: 1px solid  blue !important;
-    color:  blue !important;
-    cursor:help !important;
+    border-bottom: 1px solid  blue;
+    color:  blue ;
+    cursor:help;
 }
 
 .atf_sign{

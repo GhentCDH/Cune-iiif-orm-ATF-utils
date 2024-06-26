@@ -98,13 +98,14 @@ watch(allATFElements, (newValue, oldValue) => {
                 </div>
                 
                 <ATFTokenizer 
+
                     :atf="atf"
                     :hovered="hoveredATFElements" 
                     :selected="selectedATFElements"
                     :entities="namedEntities"
-                    :elements="allATFElements"
                     
                     :level="clickLevel"
+
                     @tokenized="onTokenized"
                     @click="onClick"
                     @mouseleave="onMouseLeave" 

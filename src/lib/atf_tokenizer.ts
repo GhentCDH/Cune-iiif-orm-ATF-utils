@@ -97,6 +97,8 @@ export default class ATFTokenizer {
 
         this.tokenizer.tokens().forEach((token: Token) => {
 
+            let signNumber = 1;
+
             if (token.type === 'tablet_part') {
                 const part = {
                     characterPosition: token.pos,
@@ -110,6 +112,7 @@ export default class ATFTokenizer {
                 tablet.parts.push(part);
             } else if (token.type === 'tablet_line_number') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
+                signNumber = 1;
                 const line = {
                     id: '',
                     cssClass: 'atf_line',
@@ -136,14 +139,16 @@ export default class ATFTokenizer {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const last_line = last_part.lines[last_part.lines.length - 1];
                 const last_word = last_line.words[last_line.words.length - 1];
-
+                
                 const sign = {
                     characterPosition: token.pos,
                     cssClass: 'atf_sign',
                     text: token.value,
-                    signNumber: last_word.signs.length + 1,
-                    selector: [tablet.parts.length,last_part.lines.length,last_line.words.length,last_word.signs.length + 1],
+                    signNumber: signNumber,
+                    selector: [tablet.parts.length,last_part.lines.length,last_line.words.length,signNumber],
                 } as ATFSign;
+
+                signNumber = signNumber + 1;
 
                 if (last_word.signs.length === 0) {
                     sign.prefix = '';

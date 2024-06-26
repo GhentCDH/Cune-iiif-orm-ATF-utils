@@ -1,6 +1,15 @@
 
-O Selectie via lijn en character index. Woord index 
-O Bij selected lijn index; sign index en tekst zelf doorgeven
+
+o selector en data structuur (element) uit elkaar halen
+o css classes anders structureren met prop?
+o char index laten oplopen: side, 
+o word level selector: omzetten in lijst van sign selectors 
+o sets geen goed idee: interne structuur exposed
+
+
+
+v Selectie via lijn en character index. Woord index 
+v Bij selected lijn index; sign index en tekst zelf doorgeven
 V prop word or sign level
 V selected niet zelf bijhouden
 V onmousover / leave events emitten
