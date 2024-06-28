@@ -145,7 +145,6 @@ const emit = defineEmits<{
 
 const selectorSelectsItem = (selectors: Array<ATFSignSelector>, item: ATFItem) : boolean => {
     const sign = item.signs[0];
-    if(!sign)    console.log("nos sign ", item);
     const signIndex = selectors.findIndex(
         (s) => s.partName === sign.partName && 
         s.lineNumber === sign.lineNumber && 
