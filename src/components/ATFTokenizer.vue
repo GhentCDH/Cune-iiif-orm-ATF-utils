@@ -36,7 +36,6 @@
             </div>   
         </div>
     </div>
-    <pre>{{ JSON.stringify(items, null, 2) }}</pre>
 </div>
 
 </template>

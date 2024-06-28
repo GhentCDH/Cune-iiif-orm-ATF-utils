@@ -1,3 +1,3 @@
 
 export * from "./types";
-export * from '@/lib/ATFSignSelector'
+export * from '@/lib/ATFSignSelector';
