@@ -1,5 +1,5 @@
 import Tokenizr,  {Token} from 'tokenizr';
-import type{ ATFLine, ATFPart, ATFSign,  ATFTablet,  ATFWord } from '../types/CuniformTypes';
+import type{ ATFItem, ATFLine, ATFPart, ATFSign,  ATFTablet,  ATFWord, ATFItemSign} from '../types/CuniformTypes';
 
 
 // See https://build-oracc.museum.upenn.edu/doc/help/editinginatf/primer/structuretutorial/index.html
@@ -60,6 +60,16 @@ export default class ATFTokenizer {
             ctx.accept('tablet_sign', match[0]);
         });
 
+        this.tokenizer.rule(/\s*\r?\n/, (ctx, ) => {
+            //ctx.accept('newline', match);
+            ctx.ignore();
+        });
+
+        this.tokenizer.rule(/\[\.+\]\s+/, (ctx, ) => {
+            //ctx.accept('newline', match);
+            ctx.ignore();
+        });
+
         //Word separators
         this.tokenizer.rule(/[ ;]+/, (ctx, match) => {
             ctx.accept('tablet_word_separator', match[2]);
@@ -71,10 +81,7 @@ export default class ATFTokenizer {
             ctx.accept('tablet_sign_separator', match[2]);
         });
 
-        this.tokenizer.rule(/\r?\n/, (ctx, ) => {
-            //ctx.accept('newline', match);
-            ctx.ignore();
-        });
+        
 
         this.tokenizer.rule(/.+/, (ctx, match) => {
             console.log('Unmatched, unexpected text: ', match);
@@ -85,53 +92,48 @@ export default class ATFTokenizer {
     tokenize(atfString: string) : ATFTablet {
 
         const tablet: ATFTablet = {
+            type: 'tablet',
             parts: [],
             characterPosition: 0,
-            id: '',
-            text: atfString,
-            cssClass: 'atf_tablet',
-            selector: []
+            text: atfString
         };
 
         this.tokenizer.input(atfString);
 
-        this.tokenizer.tokens().forEach((token: Token) => {
+        let signNumber = 1;
 
-            let signNumber = 1;
+        this.tokenizer.tokens().forEach((token: Token) => {
 
             if (token.type === 'tablet_part') {
                 const part = {
+                    type: 'part',
                     characterPosition: token.pos,
                     partNumber: tablet.parts.length + 1,
-                    id: token.value,
-                    cssClass: 'atf_part',
                     text: token.value,
                     lines: [],
-                    selector: [tablet.parts.length + 1],
                 } as ATFPart;
                 tablet.parts.push(part);
             } else if (token.type === 'tablet_line_number') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 signNumber = 1;
                 const line = {
-                    id: '',
-                    cssClass: 'atf_line',
+                    type: 'line',
                     lineNumber: last_part.lines.length + 1,
                     characterPosition: token.pos,
                     text: token.value[1],
-                    selector: [tablet.parts.length,last_part.lines.length + 1],
+                    partName: last_part.text,
                     words: []} as ATFLine;
                 last_part.lines.push(line);
             } else if (token.type === 'tablet_word_separator') {
                 const last_part = tablet.parts[tablet.parts.length - 1];
                 const last_line = last_part.lines[last_part.lines.length - 1];
                 const word = {
-                    id: '',
-                    cssClass: 'atf_word',
+                    type: 'word',
                     characterPosition: token.pos,
                     text: '',
+                    partName: last_part.text,
+                    lineNumber: last_line.lineNumber,
                     wordNumber: last_line.words.length + 1,
-                    selector: [tablet.parts.length ,last_part.lines.length,last_line.words.length + 1],
                     signs: [],
                 } as ATFWord;
                 last_line.words.push(word);
@@ -141,11 +143,12 @@ export default class ATFTokenizer {
                 const last_word = last_line.words[last_line.words.length - 1];
                 
                 const sign = {
+                    type: 'sign',
                     characterPosition: token.pos,
-                    cssClass: 'atf_sign',
                     text: token.value,
+                    partName: last_part.text,
+                    lineNumber: last_line.lineNumber,
                     signNumber: signNumber,
-                    selector: [tablet.parts.length,last_part.lines.length,last_line.words.length,signNumber],
                 } as ATFSign;
 
                 signNumber = signNumber + 1;
@@ -176,5 +179,60 @@ export default class ATFTokenizer {
         return tablet;
     }
 
+    static flatten(tablet: ATFTablet) : Array<ATFItem> {
+        const elements = new Array<ATFItem>();
+
+        // add all elements to the elements array
+        for (const part of tablet.parts) {
+            elements.push(ATFTokenizer.flattenPart(part));
+            for (const line of part.lines) {                
+                elements.push(ATFTokenizer.flattenLine(line));
+                for (const word of line.words) {
+                    elements.push(ATFTokenizer.flattenWord(word));
+                    for (const sign of word.signs) {
+                        elements.push(ATFTokenizer.flattenSign(sign));
+                    }
+                }
+            }
+        }
+
+        return elements;
+    }
+
+    static flattenPart(part: ATFPart) : ATFItem {
+        const partSigns = Array<ATFItemSign>();
+        const item = {type: 'part', content: part.text, signs: partSigns}
+        for (const line of part.lines) {
+            partSigns.push(...ATFTokenizer.flattenLine(line).signs);
+        }
+        return item;        
+    }
+
+    static flattenLine(line: ATFLine) : ATFItem {
+        const lineSigns = Array<ATFItemSign>();
+        const item = {type: 'line', content: line.text, signs: lineSigns}
+        for (const word of line.words) {
+            lineSigns.push(...ATFTokenizer.flattenWord(word).signs);
+        }
+        return item;        
+    }
+
+    static flattenWord(word: ATFWord) : ATFItem {
+        const wordSigns = Array<ATFItemSign>();
+        const item = {type: 'word', content: word.text, signs: wordSigns}
+        for (const sign of word.signs) {
+            wordSigns.push(...ATFTokenizer.flattenSign(sign).signs);
+        }
+        return item;        
+    }
+
+    static flattenSign(sign: ATFSign) : ATFItem {
+        const atfItemSign = {} as ATFItemSign;
+        atfItemSign.partName = sign.partName;
+        atfItemSign.lineNumber = sign.lineNumber;
+        atfItemSign.signNumber = sign.signNumber;
+        atfItemSign.text = (sign.prefix || '') + sign.text + (sign.suffix || '');
+        return {type: 'sign', content: atfItemSign.text, signs: [atfItemSign]};
+    }
 }
 

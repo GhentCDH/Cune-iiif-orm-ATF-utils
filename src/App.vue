@@ -1,42 +1,59 @@
 <script setup lang="ts">
-import ATFTokenizer from './components/ATFTokenizer.vue';
-import type {ATFElement} from './types/CuniformTypes';
+import ATFTokenizer from '@/components/ATFTokenizer.vue';
+//import {ATFItemSign} from './types/CuniformTypes';
+import ATFSignSelector from '@/lib/ATFSignSelector.ts';
+import {ref } from 'vue';
 
-import {  ref,watch } from 'vue';
+const activeATFSigns = ref<Array<ATFSignSelector>>([]);
 
-const selectedATFElements = ref<Set<ATFElement>>(new Set([]));
+const hoveredATFSigns = ref<Array<ATFSignSelector>>([]);
 
-const hoveredATFElements = ref<Set<ATFElement>>(new Set([]));
 
-const allATFElements = ref<ATFElement[]>(new Array<ATFElement>());
-
-const onSelect = (element: ATFElement) => {
-    console.log("onSelect",element);
-    selectedATFElements.value.add(element);
-}
-
-const onDeselect = (element: ATFElement) => {
-    console.log("onDeselect",element);
-    selectedATFElements.value.delete(element);
-}
-
-const onClick = (element: ATFElement) => {
-    if (selectedATFElements.value.has(element)) {
-        onDeselect(element);
+const activateOrDeactivateSign = (sign) => {
+    const signIndex = activeATFSigns.value.findIndex(
+        (s) =>  s.partName === sign.partName && 
+        s.lineNumber === sign.lineNumber && 
+        s.signNumber === sign.signNumber &&
+        s.type === clickLevel.value
+    )
+    if (signIndex == -1) {
+        let selector = new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value)
+        activeATFSigns.value.push(selector)//select
     } else {
-        onSelect(element);
+        activeATFSigns.value.splice(signIndex, 1)//deselect
     }
+    console.log('APP: activeATFSigns', activeATFSigns.value.length);
 }
 
-const onMouseOver = (element: ATFElement) => {
-    hoveredATFElements.value.add(element);
+const onClick = (item) => {
+    console.log('APP: atf item click', item);
+    activateOrDeactivateSign(item.signs[0]);
 }
 
-const onMouseLeave = (element: ATFElement) => {
-    hoveredATFElements.value.delete(element);
+const toggleHovered = (sign) => {
+    const signIndex = hoveredATFSigns.value.findIndex(
+        (s) =>  s.partName === sign.partName && 
+        s.lineNumber === sign.lineNumber &&
+        s.signNumber === sign.signNumber &&
+        s.type === clickLevel.value
+    )
+
+    if (signIndex == -1) {
+        hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
+    } else {
+        hoveredATFSigns.value.splice(signIndex, 1)//deselect
+    }
+
+    console.log('APP: hoveredATFSigns', hoveredATFSigns.value.length);
 }
-const onTokenized = (elements: Array<ATFElement>) => {
-    allATFElements.value = elements;
+
+const onMouseOver = (item) => {
+    //console.log("onMouseOver",item);
+    toggleHovered(item.signs[0]); 
+}
+
+const onMouseLeave = (item) => {
+    toggleHovered(item.signs[0]);
 }
 
 const clickLevel = ref('sign');
@@ -52,31 +69,7 @@ const namedEntities = ref([]);
     .then(response => response.text())
     .then(data => namedEntities.value = JSON.parse(data));
 
-watch(allATFElements, (newValue, oldValue) => {
 
-    // Code to execute when allElements changes
-    const selectByIndex = [[1,1],[2,2,2],[3,1,2,2]];
-
-    for (let i = 0; i < newValue.length; i++) {
-    const atfElement = newValue[i] as ATFElement;
-    for (let j = 0; j < selectByIndex.length; j++) {
-            const selector = selectByIndex[j];
-            if(selector.length != atfElement.selector.length) continue;
-            console.log("selector",selector,"atfElement",atfElement.selector);
-            let match = true;
-            for(let k = 0 ; k < Math.min(selector.length) && match  ; k++){
-                if(atfElement.selector[k] != selector[k]){
-                    match = false;
-                    break;
-                }
-        }
-        if(match){
-            onSelect(atfElement);
-            break;
-        }
-        }
-    }
-});
 
 </script>
 
@@ -91,22 +84,23 @@ watch(allATFElements, (newValue, oldValue) => {
                 <div style="float: right;">
                     <b>Level: </b>
                     <select  v-model="clickLevel">
-                    <option value="sign">Sign</option>
-                    <option value="word">Word</option>
-                    <option value="line">Line</option>
-                </select>
+                        <option value="sign">Sign</option>
+                        <option value="word">Word</option>
+                        <option value="line">Line</option>
+                        <option value="part">Part</option>
+                    </select>
                 </div>
                 
                 <ATFTokenizer 
 
                     :atf="atf"
-                    :hovered="hoveredATFElements" 
-                    :selected="selectedATFElements"
+                   
                     :entities="namedEntities"
                     
                     :level="clickLevel"
+                    :activeSignSelectors="activeATFSigns"
+                    :hoveredSignSelectors="hoveredATFSigns"
 
-                    @tokenized="onTokenized"
                     @click="onClick"
                     @mouseleave="onMouseLeave" 
                     @mouseover="onMouseOver"  />

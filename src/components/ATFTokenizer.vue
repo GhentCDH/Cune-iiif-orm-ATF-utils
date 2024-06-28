@@ -1,43 +1,52 @@
 <template>
 
 <div>
-    <div v-for="(part, part_index) in tokenized.parts" :key="part_index" :class="cssClassForElement(part)">
-        <b>{{ part.id }}</b>
+    <div v-for="(part, part_index) in tablet.parts" 
+    :key="part_index" 
+    :class="cssClassForElement(part)"
+    v-on:click="() => emitClick(part)"
+    v-on:mouseleave="() => emitMouseLeave(part)" 
+    v-on:mouseover="() => emitMouseOver(part)" >
+        <b>{{ part.text }}</b>
         <div v-for="(line, line_index) in part.lines" :key="line_index"
             :class="cssClassForElement(line)" 
-            v-on:click="() => {if( level == 'line') { emit('click', line) }}"
-            v-on:mouseleave="() => {if( level == 'line') {  emit('mouseleave', line)}}" 
-            v-on:mouseover="() => {if( level == 'line') {  emit('mouseover', line)}}" >   
+            v-on:click="() => emitClick(line)"
+            v-on:mouseleave="() => emitMouseLeave(line)" 
+            v-on:mouseover="() => emitMouseOver(line)" >
         
-                <div class="atf_line_gutter">{{ line.lineNumber }}.</div>
+            <div class="atf_line_gutter">{{ line.lineNumber }}.</div>
             
-                <div class="atf_line_text">
-                    <span v-for="(word,word_index) in line.words" :key="word_index">
-                        <span :class="cssClassForElement(word)"  :title="titleForElement(word)" 
-                        v-on:click="() => {if(level == 'word') { emit('click', word) }}"
-                        v-on:mouseleave="() => {if(level == 'word') {  emit('mouseleave', word) }}" 
-                        v-on:mouseover="() =>{if(level == 'word') {  emit('mouseover', word) }}" >
+            <div class="atf_line_text">
+                <span v-for="(word,word_index) in line.words" :key="word_index">
+                    <span 
+                        :class="cssClassForElement(word)"  
+                        :title="titleForElement(word)" 
+                        v-on:click="() => emitClick(word)"
+                        v-on:mouseleave="() => emitMouseLeave(word)" 
+                        v-on:mouseover="() => emitMouseOver(word)" >
                             <span  v-for="(sign, sign_index) in word.signs" :key="sign_index">
                             {{ sign.prefix }}<span
-                            v-on:click="() => {if(level == 'sign') { emit('click', sign) }}" 
-                            v-on:mouseleave="() => {if(level == 'sign') { emit('mouseleave', sign) }}" 
-                            v-on:mouseover="() => {if(level == 'sign') { emit('mouseover', sign)  }}" 
+                            v-on:click="() => emitClick(sign)" 
+                            v-on:mouseleave="() => emitMouseLeave(sign)" 
+                            v-on:mouseover="() => emitMouseOver(sign)" 
                             :class="cssClassForElement(sign)">{{ sign.text }}</span>{{ sign.suffix }}</span>
-                        </span>
-                        &nbsp;
                     </span>
-                </div>   
+                    &nbsp;
+                 </span>
+            </div>   
         </div>
     </div>
+    <pre>{{ JSON.stringify(items, null, 2) }}</pre>
 </div>
 
 </template>
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
-import ATFTokenizer from '../lib/atf_tokenizer';
+import ATFTokenizer from '../lib/ATFTokenizer';
+import ATFSignSelector from '../lib/ATFSignSelector';
 
-import type {ATFElement, ATFNamedEntity} from '@/types/';
+import {ATFElement, ATFNamedEntity} from '@/types/';
 
 const props = defineProps({
 
@@ -49,22 +58,56 @@ const props = defineProps({
      */
     atf: { type: String, required: true },
 
-    hovered: { type: Set, required: false, default: new Set([])},
+    hoveredSignSelectors: { type: Array, required: false, default: new Array<ATFSignSelector>([])},
 
-    selected: { type: Set, required: false, default: new Set([])},
-
+    activeSignSelectors: { type: Array, required: false, default: new Array<ATFSignSelector>([])},
+    
     entities: { type: Array, required: false, default: []},
 
-
     /**
-     * The level prop specifies the level of selection or hovering: .
+     * The level prop specifies the level of selection or hovering: sign, word, line or part.
      * 
      * @type {String}
      * @default 'sign'
      * @required false
      */
-    level: { type: String, required: false, default: 'sign'}
+    level: { type: String , required: false, default: 'sign'}
 });
+
+const elementToItem = (element) : ATFItem => {
+    let item: ATFItem = null;
+    if(element.type=='line') 
+        item = ATFTokenizer.flattenLine(element);
+    else if(element.type=='word')
+        item = ATFTokenizer.flattenWord(element);
+    else if(element.type=='sign')
+        item = ATFTokenizer.flattenSign(element);
+    else if(element.type=='part')
+        item = ATFTokenizer.flattenPart(element);
+    return item;
+};
+
+
+const emitClick = (element) => {
+    if(element.type === props.level){
+        let item: ATFItem = elementToItem(element);
+        emit('click', item);
+    }
+};
+
+const emitMouseOver = (element) => {
+    if(element.type === props.level){
+        let item: ATFItem = elementToItem(element);
+        emit('mouseover', item);
+    }
+}
+
+const emitMouseLeave = (element) => {
+    if(element.type === props.level){
+        let item: ATFItem = elementToItem(element);
+        emit('mouseleave', item);
+    }
+}
 
 /**
  * Returns the CSS class for the given ATF element.
@@ -72,9 +115,12 @@ const props = defineProps({
  * @returns {string} - The CSS class for the element.
  */
 const cssClassForElement = (element: ATFElement) : string => {
-    let cssClass = element.cssClass;
-    if(isMouseOver(element)) cssClass = cssClass + ' atf_hovered';
-    if(isSelected(element))  cssClass = cssClass + ' atf_selected';
+    
+    let item: ATFItem = elementToItem(element);
+    let cssClass = 'atf_' + item.type;
+
+    if(selectorSelectsItem(props.activeSignSelectors,item))  cssClass = cssClass + ' atf_active';
+    if(selectorSelectsItem(props.hoveredSignSelectors,item)) cssClass = cssClass + ' atf_hovered';
     if(isNamedEntity(element))  cssClass = cssClass + ' atf_named_entity';
 
     return cssClass;
@@ -90,23 +136,31 @@ const titleForElement = (element: ATFElement) : string => {
 }
 
 const emit = defineEmits<{
-  (event: 'mouseleave', payload: ATFElement): void;
-  (event: 'mouseover' , payload: ATFElement): void;
-  (event: 'click'     , payload: ATFElement): void;
-  (event: 'tokenized' , payload: Array<ATFElement>): void;
+  (event: 'mouseleave', payload: ATFItem): void;
+  (event: 'mouseover' , payload: ATFItem): void;
+  (event: 'click'     , payload: ATFItem): void;
+  (event: 'tokenized' , payload: Array<ATFItem>): void;
 }>();
 
-const isSelected = (element: ATFElement) : boolean => {
-    return props.selected.has(element);
-}
-const isMouseOver = (element: ATFElement) : boolean => {
-    return props.hovered.has(element);
-}
-const isNamedEntity = (element: ATFElement) : boolean => {
-   return namedEntitiesMap.value.has(element.text);
+
+const selectorSelectsItem = (selectors: Array<ATFSignSelector>, item: ATFItem) : boolean => {
+    const sign = item.signs[0];
+    if(!sign)    console.log("nos sign ", item);
+    const signIndex = selectors.findIndex(
+        (s) => s.partName === sign.partName && 
+        s.lineNumber === sign.lineNumber && 
+        s.signNumber === sign.signNumber &&
+        s.type === item.type
+    )
+    
+    return signIndex != -1;
 }
 
-const atf = toRef(props, 'atf')
+
+
+const isNamedEntity = (element: ATFElement) : boolean => {
+    return namedEntitiesMap.value.has(element.text);
+}
 
 const namedEntitiesMap = computed(() : Map<string,ATFNamedEntity> => {
     const map = new Map<string,ATFNamedEntity>();
@@ -117,36 +171,27 @@ const namedEntitiesMap = computed(() : Map<string,ATFNamedEntity> => {
     return map;
 });
 
-const tokenized = computed(() => {
+const atf = toRef(props, 'atf')
+
+
+const tablet = computed(() => {
+
     const tokenizer = new ATFTokenizer();
-    const tokens = tokenizer.tokenize(props.atf);
+    const tabletElement = tokenizer.tokenize(props.atf);
 
-    // Clear the elements array
-    let elements = new Array<ATFElement>();
+    return tabletElement;
+});
 
-    // add all elements to the elements array
-    for (const part of tokens.parts) {
-        elements.push(part);
-        for (const line of part.lines) {
-            elements.push(line);
-            for (const word of line.words) {
-                elements.push(word);
-                for (const sign of word.signs) {
-                    elements.push(sign);
-                }
-            }
-        }
-    }
-
-    emit('tokenized', elements) 
-
-    return tokens;
+const items = computed(() => {
+    const items =  ATFTokenizer.flatten(tablet.value);
+    emit('tokenized', items);
+    return items
 });
 
 
 </script>
 
-<style scoped>
+<style>
 b {
     font-weight: bold;
 }
@@ -155,9 +200,7 @@ h3 {
     margin: 0;
     padding: 0;
 }
-</style>
 
-<style>
 .atf_line{
     display: grid;
     grid-template-columns: 2rem auto;
@@ -171,9 +214,8 @@ h3 {
 }
 
 .atf_named_entity {
-
-    border-bottom: 1px solid  blue;
-    color:  blue ;
+    border-bottom: 1px solid  rgb(172, 87, 0);
+    color: rgb(172, 87, 0);
     cursor:help;
 }
 
@@ -182,9 +224,7 @@ h3 {
     padding-bottom: 0.2rem;
     border-radius: 0.2rem;
     cursor: pointer;
-
-    border-bottom: 1px solid #F6F6F6;
-    border-right: 1px solid #F6F6F6;
+    border-bottom: 1px solid transparent;
 }
 
 .atf_word {
@@ -196,11 +236,15 @@ h3 {
 }
 
 .atf_hovered {
-    border-bottom: 1px solid red;
+    border-bottom: 1px solid rgb(42, 96, 44) !important;
+    background-color: rgb(212, 236, 213) !important;
+    color: rgb(42, 96, 44) !important;
+
 }
 
-.atf_selected{
-    color: green;
-    background-color: beige;
+.atf_active{
+    color:  rgb(42, 96, 44);
+    border-color:  rgb(42, 96, 44);
+    background-color: rgb(234, 246, 234);
 }
 </style>

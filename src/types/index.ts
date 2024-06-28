@@ -12,4 +12,6 @@ export type {
     ATFPart,
     ATFTablet,
     ATFNamedEntity,
+    ATFItem,
+    ATFItemSign
 } from "./CuniformTypes";
