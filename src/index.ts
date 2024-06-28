@@ -1,10 +1,13 @@
 import ATFTokenizer from "./components/ATFTokenizer.vue";
+import ATFSignSelector from "./lib/ATFSignSelector";
 
 export default{ 
     components: {
-        ATFTokenizer 
+        ATFTokenizer,
+        ATFSignSelector
     },
-    ATFTokenizer
+    ATFTokenizer,
+    ATFSignSelector
 };
 
 export * from "./types";
