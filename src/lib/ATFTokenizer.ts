@@ -153,6 +153,7 @@ export default class ATFTokenizer {
                     partName: last_part.text,
                     lineNumber: last_line.lineNumber,
                     signNumber: signNumber,
+                    wordNumber: last_word.wordNumber,
                 } as ATFSign;
 
                 signNumber = signNumber + 1;
@@ -237,6 +238,7 @@ export default class ATFTokenizer {
         atfItemSign.partName = sign.partName;
         atfItemSign.lineNumber = sign.lineNumber;
         atfItemSign.signNumber = sign.signNumber;
+        atfItemSign.wordNumber = sign.wordNumber;
         atfItemSign.text = (sign.prefix || '') + sign.text + (sign.suffix || '');
         return {type: 'sign', content: atfItemSign.text, signs: [atfItemSign]};
     }

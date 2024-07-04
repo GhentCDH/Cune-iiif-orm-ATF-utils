@@ -8,6 +8,7 @@ export interface ATFItemSign {
    partName: string
    lineNumber: number
    signNumber: number
+   wordNumber: number
    text: string
 }
 
@@ -54,6 +55,7 @@ export type ATFSign = ATFElement & {
     signNumber: number,
     partName: string,
     lineNumber: number,
+    wordNumber: number,
     prefix?: string;
     suffix?: string;
 };

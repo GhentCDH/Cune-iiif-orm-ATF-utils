@@ -145,12 +145,16 @@ const emit = defineEmits<{
 
 const selectorSelectsItem = (selectors: Array<ATFSignSelector>, item: ATFItem) : boolean => {
     const sign = item.signs[0];
-    const signIndex = selectors.findIndex(
-        (s) => s.partName === sign.partName && 
-        s.lineNumber === sign.lineNumber && 
-        s.signNumber === sign.signNumber &&
-        s.type === item.type
-    )
+
+    let signIndex = -1;
+    if(item.type === 'part') 
+        signIndex = selectors.findIndex( (s) => s.partName === sign.partName && s.lineNumber === undefined && s.signNumber === undefined && s.wordNumber === undefined);
+    else if(item.type === 'line')
+        signIndex = selectors.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === undefined && s.wordNumber === undefined);
+    else if(item.type === 'word')
+        signIndex = selectors.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === undefined && s.wordNumber === sign.wordNumber);
+    else if(item.type === 'sign')
+        signIndex = selectors.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === sign.signNumber);
     
     return signIndex != -1;
 }
@@ -176,15 +180,13 @@ const tablet = computed(() => {
     const tokenizer = new ATFTokenizer();
     const tabletElement = tokenizer.tokenize(props.atf);
 
+    const items =  ATFTokenizer.flatten(tabletElement);
+    //console.log('Extracted number of atf items: ', items.length);
+    emit('tokenized', items);
+
     return tabletElement;
 });
 
-const items = computed(() => {
-    const items =  ATFTokenizer.flatten(tablet.value);
-    console.log('Extracted number of atf items: ', items.length);
-    emit('tokenized', items);
-    return items
-});
 
 
 </script>

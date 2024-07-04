@@ -9,30 +9,48 @@ const activeATFSigns = ref<Array<ATFSignSelector>>([]);
 const hoveredATFSigns = ref<Array<ATFSignSelector>>([]);
 
 
-const activateOrDeactivateSign = (sign) => {
-    const signIndex = activeATFSigns.value.findIndex(
-        (s) =>  s.partName === sign.partName && 
-        s.lineNumber === sign.lineNumber && 
-        s.signNumber === sign.signNumber &&
-        s.type === clickLevel.value
-    )
+const activateOrDeactivateItem = (item) => {
+    
+    let sign = item.signs[0];
+    let signIndex = -1;
+    if(item.type === 'part')
+        signIndex = activeATFSigns.value.findIndex( (s) => s.partName === sign.partName && s.lineNumber === undefined && s.signNumber === undefined && s.wordNumber === undefined);
+    else if(item.type === 'line')
+        signIndex = activeATFSigns.value.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === undefined && s.wordNumber === undefined);
+    else if(item.type === 'word')
+        signIndex = activeATFSigns.value.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === undefined && s.wordNumber === sign.wordNumber);
+    else if(item.type === 'sign')
+        signIndex = activeATFSigns.value.findIndex( (s) => s.partName === sign.partName && s.lineNumber === sign.lineNumber && s.signNumber === sign.signNumber);
+
     if (signIndex == -1) {
-        let selector = new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value)
+        let selector = itemToSelector(item);
         activeATFSigns.value.push(selector)//select
     } else {
         activeATFSigns.value.splice(signIndex, 1)//deselect
     }
+
     console.log('APP: activeATFSigns', activeATFSigns.value.length,item);
 }
 
 const onClick = (item) => {
     console.log('APP: atf item click', item);
-    activateOrDeactivateSign(item.signs[0]);
+    activateOrDeactivateItem(item);
+}
+
+const itemToSelector = (item) => {
+    let sign = item.signs[0];
+    let selector = new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,sign.wordNumber)
+    if(clickLevel.value == 'part')
+        selector = new ATFSignSelector(sign.partName, undefined, undefined,undefined)
+    else if(clickLevel.value == 'line')
+        selector = new ATFSignSelector(sign.partName, sign.lineNumber, undefined,undefined)
+    else if(clickLevel.value == 'word')
+        selector = new ATFSignSelector(sign.partName, sign.lineNumber, undefined,sign.wordNumber)
+    return selector;
 }
 
 const onMouseEnter = (item) => {
-    let sign = item.signs[0];
-    hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
+    hoveredATFSigns.value.push(itemToSelector(item));
     console.log('APP: mouse enter', hoveredATFSigns.value.length);
 }
 
