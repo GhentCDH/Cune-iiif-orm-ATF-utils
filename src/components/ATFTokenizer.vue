@@ -199,6 +199,11 @@ h3 {
     padding: 0;
 }
 
+.atf_part{
+    border-radius: 0.4rem;
+    border-left: 1px solid transparent;
+}
+
 .atf_line{
     display: grid;
     grid-template-columns: 2rem auto;
@@ -235,10 +240,14 @@ h3 {
 }
 
 .atf_hovered {
-    border-bottom: 1px solid rgb(42, 96, 44) !important;
+    border-bottom: 1px solid rgb(42, 96, 44);
     background-color: rgb(212, 236, 213) !important;
-    color: rgb(42, 96, 44) !important;
+    color: rgb(42, 96, 44);
+}
 
+.atf_part.atf_hovered{
+    border-left: 1px solid  rgb(42, 96, 44) !important;
+    border-bottom: none !important;
 }
 
 .atf_active{
