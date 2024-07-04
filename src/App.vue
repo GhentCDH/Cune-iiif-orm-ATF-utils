@@ -31,29 +31,17 @@ const onClick = (item) => {
 }
 
 const toggleHovered = (sign) => {
-    const signIndex = hoveredATFSigns.value.findIndex(
-        (s) =>  s.partName === sign.partName && 
-        s.lineNumber === sign.lineNumber &&
-        s.signNumber === sign.signNumber &&
-        s.type === clickLevel.value
-    )
-
-    if (signIndex == -1) {
-        hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
-    } else {
-        hoveredATFSigns.value.splice(signIndex, 1)//deselect
-    }
-
-    console.log('APP: hoveredATFSigns', hoveredATFSigns.value.length);
+    
 }
 
 const onMouseOver = (item) => {
-    //console.log("onMouseOver",item);
-    toggleHovered(item.signs[0]); 
+    let sign = item.signs[0];
+    hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
 }
 
 const onMouseLeave = (item) => {
-    toggleHovered(item.signs[0]);
+    hoveredATFSigns.value.splice(0, hoveredATFSigns.value.length);
+    console.log('APP: hoveredATFSigns', hoveredATFSigns.value.length);
 }
 
 const clickLevel = ref('sign');

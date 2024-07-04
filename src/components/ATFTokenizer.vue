@@ -206,6 +206,10 @@ h3 {
     border-radius: 0.2rem;
 }
 
+.atf_line.atf_hovered{
+    border: none !important; 
+}
+
 .atf_line_gutter {
     color: gray;
     user-select: none;
