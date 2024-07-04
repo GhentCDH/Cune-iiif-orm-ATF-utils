@@ -18,33 +18,34 @@ export default class ATFTokenizer {
 
         //tablet part indication @obverse, @reverse, @edge
         // eslint-disable-next-line
-        this.tokenizer.rule(/\@tablet/, (ctx, match) => {
+        this.tokenizer.rule(/@tablet/, (ctx, match) => {
             ctx.ignore();
         });
 
         //tablet part indication @obverse, @reverse, @edge
         // eslint-disable-next-line no-useless-escape
-        this.tokenizer.rule(/(\@)(.+)/, (ctx, match) => {
+        const tablet_part_regex = /(@)(.+)/u;
+        this.tokenizer.rule(tablet_part_regex, (ctx, match) => {
             ctx.accept('tablet_part', match[2]);
         });
         
         //dollar line
-        this.tokenizer.rule(/(\$) (.+)/, (ctx, match) => {
+        this.tokenizer.rule(/(\$) (.+)/u, (ctx, match) => {
             ctx.accept('tablet_dollar_line', match[1]);
         });
 
         //tablet identifier, &
-        this.tokenizer.rule(/(&)(.+?)(=>*)?/, (ctx, match) => {
+        this.tokenizer.rule(/(&)(.+?)(=>*)?/u, (ctx, match) => {
             ctx.accept('tablet_identifier', match[0]);
         });
 
         //comment line
-        this.tokenizer.rule(/\n ?# ?.*/, (ctx, match) => {
+        this.tokenizer.rule(/\n ?# ?.*/u, (ctx, match) => {
             ctx.accept('tablet_comment', match);    
         });
 
         //tablet line number
-        this.tokenizer.rule(/[0-9]+\. /, (ctx, match) => {
+        this.tokenizer.rule(/[0-9]+\. +/u, (ctx, match) => {
             const remaineder = match.input.substring(match.index);
             const lineText = remaineder.substring(0,remaineder.indexOf('\n'));
             const lineNumber = parseInt(match[0]);
@@ -56,32 +57,35 @@ export default class ATFTokenizer {
 
         //tablet sign delimeted by {} e.g. KI ur-{gisz}GIGIR
         // eslint-disable-next-line
-        this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+#?\}?/, (ctx, match) => {
+        this.tokenizer.rule(/\{?[0-9a-zA-Z\(\)]+#?\}?/u, (ctx, match) => {
             ctx.accept('tablet_sign', match[0]);
         });
 
-        this.tokenizer.rule(/\s*\r?\n/, (ctx, ) => {
+        this.tokenizer.rule(/\s*\r?\n/u, (ctx, ) => {
             //ctx.accept('newline', match);
             ctx.ignore();
         });
 
-        this.tokenizer.rule(/\[\.+\]\s+/, (ctx, ) => {
+        this.tokenizer.rule(/\[(\.+|…+)\]\s+/u, (ctx, ) => {
             //ctx.accept('newline', match);
+
+            //TODO: implement handling of missing text
+            //for now filler text is ignored, but it could be used to indicate missing text 
+            //and add data strutures to the tablet model
+
             ctx.ignore();
         });
 
         //Word separators
-        this.tokenizer.rule(/[ ;]+/, (ctx, match) => {
+        this.tokenizer.rule(/[ ;]+/u, (ctx, match) => {
             ctx.accept('tablet_word_separator', match[2]);
         });
 
         //Sign separators
         // eslint-disable-next-line
-        this.tokenizer.rule(/[.<>\-\[\]\?;\#/]+/, (ctx, match) => {
+        this.tokenizer.rule(/[.<>\-\[\]\?;#/]+/u, (ctx, match) => {
             ctx.accept('tablet_sign_separator', match[2]);
-        });
-
-        
+        });        
 
         this.tokenizer.rule(/.+/, (ctx, match) => {
             console.log('Unmatched, unexpected text: ', match);
@@ -195,6 +199,8 @@ export default class ATFTokenizer {
                 }
             }
         }
+
+
 
         return elements;
     }

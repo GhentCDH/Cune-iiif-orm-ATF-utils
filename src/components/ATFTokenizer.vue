@@ -154,8 +154,6 @@ const selectorSelectsItem = (selectors: Array<ATFSignSelector>, item: ATFItem) :
     return signIndex != -1;
 }
 
-
-
 const isNamedEntity = (element: ATFElement) : boolean => {
     return namedEntitiesMap.value.has(element.text);
 }
@@ -182,6 +180,7 @@ const tablet = computed(() => {
 
 const items = computed(() => {
     const items =  ATFTokenizer.flatten(tablet.value);
+    console.log('Extracted number of atf items: ', items.length);
     emit('tokenized', items);
     return items
 });
