@@ -6,13 +6,13 @@
     :class="cssClassForElement(part)"
     v-on:click="() => emitClick(part)"
     v-on:mouseleave="() => emitMouseLeave(part)" 
-    v-on:mouseover="() => emitMouseOver(part)" >
+    v-on:mouseenter="() => emitMouseEnter(part)" >
         <b>{{ part.text }}</b>
         <div v-for="(line, line_index) in part.lines" :key="line_index"
             :class="cssClassForElement(line)" 
             v-on:click="() => emitClick(line)"
             v-on:mouseleave="() => emitMouseLeave(line)" 
-            v-on:mouseover="() => emitMouseOver(line)" >
+            v-on:mouseenter="() => emitMouseEnter(line)" >
         
             <div class="atf_line_gutter">{{ line.lineNumber }}.</div>
             
@@ -23,12 +23,12 @@
                         :title="titleForElement(word)" 
                         v-on:click="() => emitClick(word)"
                         v-on:mouseleave="() => emitMouseLeave(word)" 
-                        v-on:mouseover="() => emitMouseOver(word)" >
+                        v-on:mouseenter="() => emitMouseEnter(word)" >
                             <span  v-for="(sign, sign_index) in word.signs" :key="sign_index">
                             {{ sign.prefix }}<span
                             v-on:click="() => emitClick(sign)" 
                             v-on:mouseleave="() => emitMouseLeave(sign)" 
-                            v-on:mouseover="() => emitMouseOver(sign)" 
+                            v-on:mouseenter="() => emitMouseEnter(sign)" 
                             :class="cssClassForElement(sign)">{{ sign.text }}</span>{{ sign.suffix }}</span>
                     </span>
                     &nbsp;
@@ -94,10 +94,11 @@ const emitClick = (element) => {
     }
 };
 
-const emitMouseOver = (element) => {
+const emitMouseEnter = (element) => {
     if(element.type === props.level){
+        console.log('Mouse enter: ', element.type, element.text,props.level)
         let item: ATFItem = elementToItem(element);
-        emit('mouseover', item);
+        emit('mouseenter', item);
     }
 }
 
@@ -136,7 +137,7 @@ const titleForElement = (element: ATFElement) : string => {
 
 const emit = defineEmits<{
   (event: 'mouseleave', payload: ATFItem): void;
-  (event: 'mouseover' , payload: ATFItem): void;
+  (event: 'mouseenter' , payload: ATFItem): void;
   (event: 'click'     , payload: ATFItem): void;
   (event: 'tokenized' , payload: Array<ATFItem>): void;
 }>();

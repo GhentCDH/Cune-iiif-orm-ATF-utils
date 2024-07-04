@@ -22,7 +22,7 @@ const activateOrDeactivateSign = (sign) => {
     } else {
         activeATFSigns.value.splice(signIndex, 1)//deselect
     }
-    console.log('APP: activeATFSigns', activeATFSigns.value.length);
+    console.log('APP: activeATFSigns', activeATFSigns.value.length,item);
 }
 
 const onClick = (item) => {
@@ -30,9 +30,10 @@ const onClick = (item) => {
     activateOrDeactivateSign(item.signs[0]);
 }
 
-const onMouseOver = (item) => {
+const onMouseEnter = (item) => {
     let sign = item.signs[0];
     hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
+    console.log('APP: mouse enter', hoveredATFSigns.value.length);
 }
 
 const onMouseLeave = (item) => {
@@ -86,7 +87,7 @@ const namedEntities = ref([]);
 
                     @click="onClick"
                     @mouseleave="onMouseLeave" 
-                    @mouseover="onMouseOver"  />
+                    @mouseenter="onMouseEnter"  />
 
             </div>
         </div>
