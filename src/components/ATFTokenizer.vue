@@ -203,11 +203,8 @@ h3 {
     display: grid;
     grid-template-columns: 2rem auto;
     padding: 0.2rem;
-    border-radius: 0.2rem;
-}
-
-.atf_line.atf_hovered{
-    border: none !important; 
+    border-radius: 0.4rem;
+    border-bottom: 1px solid transparent;
 }
 
 .atf_line_gutter {

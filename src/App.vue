@@ -30,10 +30,6 @@ const onClick = (item) => {
     activateOrDeactivateSign(item.signs[0]);
 }
 
-const toggleHovered = (sign) => {
-    
-}
-
 const onMouseOver = (item) => {
     let sign = item.signs[0];
     hoveredATFSigns.value.push(new ATFSignSelector(sign.partName, sign.lineNumber, sign.signNumber,clickLevel.value))//select
