@@ -45,7 +45,7 @@ export default class ATFTokenizer {
         });
 
         //tablet line number
-        this.tokenizer.rule(/[0-9]+\. +/u, (ctx, match) => {
+        this.tokenizer.rule(/[0-9]+\.\s+/u, (ctx, match) => {
             const remaineder = match.input.substring(match.index);
             const lineText = remaineder.substring(0,remaineder.indexOf('\n'));
             const lineNumber = parseInt(match[0]);
