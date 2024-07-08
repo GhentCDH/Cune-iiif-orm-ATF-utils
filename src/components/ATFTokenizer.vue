@@ -144,6 +144,9 @@ const emit = defineEmits<{
 
 
 const selectorSelectsItem = (selectors: Array<ATFSignSelector>, item: ATFItem) : boolean => {
+    // todo: item.signs can be empty. why?
+    if (!item || !item?.signs?.length) return false;
+
     const sign = item.signs[0];
 
     let signIndex = -1;
