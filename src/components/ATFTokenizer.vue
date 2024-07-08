@@ -96,7 +96,7 @@ const emitClick = (element) => {
 
 const emitMouseEnter = (element) => {
     if(element.type === props.level){
-        console.log('Mouse enter: ', element.type, element.text,props.level)
+        // console.log('Mouse enter: ', element.type, element.text,props.level)
         let item: ATFItem = elementToItem(element);
         emit('mouseenter', item);
     }

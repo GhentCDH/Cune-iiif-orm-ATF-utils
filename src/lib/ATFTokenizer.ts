@@ -8,11 +8,15 @@ import type{ ATFItem, ATFLine, ATFPart, ATFSign,  ATFTablet,  ATFWord, ATFItemSi
 
 export default class ATFTokenizer {
     private tokenizer: Tokenizr;
+    private verbose: boolean;
 
     constructor() {
         this.tokenizer = new Tokenizr();
+        this.verbose = false;
         this.setupRules();
     }
+
+
 
     private setupRules() {
 
@@ -88,9 +92,13 @@ export default class ATFTokenizer {
         });        
 
         this.tokenizer.rule(/.+/, (ctx, match) => {
-            console.log('Unmatched, unexpected text: ', match);
+            this.verbose && console.log('Unmatched, unexpected text: ', match);
             ctx.accept('line', match);
         });
+    }
+
+    setVerbose(verbose: boolean) {
+        this.verbose = verbose;
     }
 
     tokenize(atfString: string) : ATFTablet {
