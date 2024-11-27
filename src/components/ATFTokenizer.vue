@@ -45,7 +45,7 @@ import { computed, toRef } from 'vue';
 import ATFTokenizer from '../lib/ATFTokenizer';
 import ATFSignSelector from '../lib/ATFSignSelector';
 
-import {ATFElement, ATFNamedEntity} from '@/types/';
+import {ATFElement, ATFNamedEntity} from '../types/';
 
 const props = defineProps({
 

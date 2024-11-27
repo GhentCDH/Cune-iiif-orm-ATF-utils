@@ -1,7 +1,7 @@
 import type { ATFItemSign } from "@/types/CuniformTypes"
 
 
-export default class ATFSignSelector {
+export class ATFSignSelector {
   partName: string
   lineNumber?: number
   signNumber?: number

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import ATFTokenizer from '@/components/ATFTokenizer.vue';
-//import {ATFItemSign} from './types/CuniformTypes';
-import ATFSignSelector from '@/lib/ATFSignSelector.ts';
+import ATFTokenizer from './components/ATFTokenizer.vue';
+import { ATFSignSelector } from './lib/ATFSignSelector';
 import {computed, ref } from 'vue';
 
 const activeATFSigns = ref<Array<ATFSignSelector>>([]);
