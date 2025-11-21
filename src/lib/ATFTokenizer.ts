@@ -1,4 +1,4 @@
-import Tokenizr,  {Token} from 'tokenizr';
+import {Tokenizr, Token} from 'tokenizr';
 import type{ ATFItem, ATFLine, ATFPart, ATFSign,  ATFTablet,  ATFWord, ATFItemSign} from '../types/CuniformTypes';
 
 
@@ -15,7 +15,6 @@ export default class ATFTokenizer {
         this.verbose = false;
         this.setupRules();
     }
-
 
 
     private setupRules() {
